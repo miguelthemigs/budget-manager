@@ -1,5 +1,5 @@
 package org.example.budgetmanager.model;
 
-public class Expenses {
+public class Expense {
 
 }
