@@ -42,4 +42,11 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> editUser(@PathVariable("id") Long id, @RequestBody User user) {
+        user.setId(id);
+        userService.editUser(user);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

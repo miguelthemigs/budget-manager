@@ -45,4 +45,12 @@ public class UserRepositoryImpl implements UserRepository {
     public void deleteUser(Long id) {
         usersDatabase.remove(id);
     }
+
+    public void editUser(User user) {
+        if (user != null && user.getId() != null) {
+            usersDatabase.put(user.getId(), user);
+        } else {
+            throw new IllegalArgumentException("User or User ID cannot be null");
+        }
+    }
 }

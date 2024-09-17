@@ -1,5 +1,6 @@
 package org.example.budgetmanager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 @NoArgsConstructor
@@ -11,6 +12,7 @@ public class User {
     private Long id;
     private String name;
     private String email;
+    @JsonIgnore
     private String password;
 
 
