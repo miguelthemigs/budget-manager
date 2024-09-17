@@ -11,7 +11,6 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -19,14 +18,27 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '17'  # Specify the JDK version
-          distribution: 'corretto'  # Use 'corretto' for Amazon Corretto
+          java-version: '17'
+          distribution: 'corretto'
 
       - name: Build with Gradle
-        run: ./gradlew build  # Use Gradle wrapper to build
-
-      - name: Run tests
-        run: ./gradlew test  # Use Gradle wrapper to run tests
+        run: ./gradlew build
 
       - name: Package
-        run: ./gradlew assemble  # Use Gradle wrapper to assemble the package
+        run: ./gradlew assemble
+
+  test:
+    runs-on: windows-latest
+    needs: build  # Ensure this job runs after the build job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Run tests
+        run: ./gradlew test
