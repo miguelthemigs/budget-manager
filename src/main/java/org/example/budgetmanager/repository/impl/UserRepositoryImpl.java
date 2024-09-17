@@ -19,6 +19,20 @@ public class UserRepositoryImpl implements UserRepository {
         usersDatabase.put(user1.getId(), user1);
         usersDatabase.put(user2.getId(), user2);
     }
+
+    // Method to add sample data for testing
+    private void populateSampleData() {
+        User user1 = new User(1L, "John Doe", "test@example.com", "password123");
+        User user2 = new User(2L, "Jane Doe", "jane@example.com", "password456");
+        usersDatabase.put(user1.getId(), user1);
+        usersDatabase.put(user2.getId(), user2);
+    }
+    public void clearData() {
+        usersDatabase.clear();
+    }
+    public void addSampleData() {
+        populateSampleData();
+    }
     @Override
     public User findById(Long id) {
         return usersDatabase.get(id);  // Finding user by ID
@@ -26,5 +40,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     public void addUser(User user) {
         usersDatabase.put(user.getId(), user);
+    }
+
+    public void deleteUser(Long id) {
+        usersDatabase.remove(id);
     }
 }

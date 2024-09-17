@@ -22,4 +22,8 @@ public class UserServiceImpl implements UserService {
     public void addUser(User user) {
         UserRepositoryImpl.addUser(user);
     }
+
+    public void deleteUser(Long id) {
+        UserRepositoryImpl.deleteUser(id);
+    }
 }
