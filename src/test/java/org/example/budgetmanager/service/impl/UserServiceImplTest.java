@@ -87,11 +87,11 @@ class UserServiceImplTest {
         User user = new User();
         user.setId(1L);
 
-        // Simulate an exception
+        // simulate an exception
         doThrow(new IllegalArgumentException("User ID cannot be null"))
                 .when(userRepository).editUser(any(User.class));
 
-        // Verify that the exception is handled correctly
+        // verify that the exception is handled correctly
         try {
             userService.editUser(user);
         } catch (IllegalArgumentException e) {
@@ -101,7 +101,7 @@ class UserServiceImplTest {
 
     @Test
     public void testEditUserNullUser() {
-        // Expect an exception when the user is null
+        // expect an exception when the user is null
         try {
             userService.editUser(null);
         } catch (IllegalArgumentException e) {
@@ -114,7 +114,7 @@ class UserServiceImplTest {
         User user = new User();
         user.setId(null);
 
-        // Expect an exception when the user ID is null
+        // expect an exception when the user ID is null
         try {
             userService.editUser(user);
         } catch (IllegalArgumentException e) {
