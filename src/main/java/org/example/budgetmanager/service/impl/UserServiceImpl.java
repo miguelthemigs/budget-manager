@@ -4,30 +4,36 @@ import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.repository.impl.UserRepositoryImpl;
 import org.example.budgetmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepositoryImpl UserRepositoryImpl;
+
+    private final UserRepositoryImpl userRepositoryImpl;
 
     @Autowired
-    public UserServiceImpl(UserRepositoryImpl userRepository) {
-        this.UserRepositoryImpl = userRepository;  // Inject UserRepository, not Long
+    public UserServiceImpl(UserRepositoryImpl userRepositoryImpl) {
+        this.userRepositoryImpl = userRepositoryImpl;
     }
 
     public User findById(Long id) {
-        return UserRepositoryImpl.findById(id);
+        return userRepositoryImpl.findById(id);
     }
 
     public void addUser(User user) {
-        UserRepositoryImpl.addUser(user);
+        userRepositoryImpl.addUser(user);
     }
 
     public void deleteUser(Long id) {
-        UserRepositoryImpl.deleteUser(id);
+        userRepositoryImpl.deleteUser(id);
     }
 
-    public void editUser(User user) {
-        UserRepositoryImpl.editUser(user);
-    }
-}
+    public ResponseEntity<Void> editUser(User user) {
+        try {
+            userRepositoryImpl.editUser(user);
+            return ResponseEntity.ok().build(); // Successful update
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+}}

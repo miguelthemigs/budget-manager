@@ -33,7 +33,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void addSampleData() {
         populateSampleData();
     }
-    @Override
+
     public User findById(Long id) {
         return usersDatabase.get(id);  // Finding user by ID
     }
@@ -47,10 +47,25 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     public void editUser(User user) {
-        if (user != null && user.getId() != null) {
-            usersDatabase.put(user.getId(), user);
-        } else {
-            throw new IllegalArgumentException("User or User ID cannot be null");
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
         }
+
+        Long userId = user.getId();
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
+        }
+
+        // Ensure that the user exists in the database before attempting to update
+        if (!usersDatabase.containsKey(userId)) {
+            throw new IllegalArgumentException("User with ID " + userId + " does not exist");
+        }
+
+        // Validate that no other attributes of the user are null (if applicable)
+        if (user.getName() == null || user.getEmail() == null) {
+            throw new IllegalArgumentException("User name and email cannot be null");
+        }
+
+        usersDatabase.put(userId, user);
     }
 }
