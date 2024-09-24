@@ -1,18 +1,22 @@
 package org.example.budgetmanager.service.impl;
 
+import jakarta.validation.*;
 import org.example.budgetmanager.model.Expense;
 import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.repository.ExpensesRepository;
 import org.example.budgetmanager.repository.UserRepository;
+import org.example.budgetmanager.service.exeptions.GlobalExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,6 +32,9 @@ class ExpenseServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private GlobalExceptionHandler globalExceptionHandler;
 
     @BeforeEach
     void setUp() {
@@ -123,4 +130,61 @@ class ExpenseServiceImplTest {
         assertEquals("Expense with ID " + expenseId + " not found", thrown.getMessage());
         verify(expensesRepository, times(1)).findExpenseById(expenseId);
     }
-}
+
+    @Test
+    void addExpense_ValidExpense() {
+        Expense expense = new Expense(1L, "Food", "Lunch", 15.50, "2024-09-24", 1L);
+        expenseService.addExpense(expense);
+        verify(expensesRepository, times(1)).addExpense(expense);
+        assertEquals(1, expense.getUserId());
+        assertEquals(1L, expense.getId());
+    }
+
+
+    @Test
+    void addInvalidExpense() { // I need to check if the validators and exceptions are working as expected
+        Expense invalidExpense = new Expense(null, null, null, -2.45, null, null); // All fields invalid
+
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<Expense>> violations = validator.validate(invalidExpense);
+
+        // Mock the response from the GlobalExceptionHandler
+        Map<String, String> mockErrors = new HashMap<>();
+        mockErrors.put("category", "Category cannot be null");
+        mockErrors.put("amount", "Amount must be positive");
+        mockErrors.put("userId", "User ID cannot be null");
+
+        when(globalExceptionHandler.handleValidationExceptions(any(MethodArgumentNotValidException.class)))
+                .thenReturn(ResponseEntity.badRequest().body(mockErrors));
+
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.getFieldErrors()).thenReturn(List.of(
+                new FieldError("expense", "category", "Category cannot be null"),
+                new FieldError("expense", "amount", "Amount must be positive"),
+                new FieldError("expense", "userId", "User ID cannot be null")
+        ));
+        when(bindingResult.getGlobalErrors()).thenReturn(Collections.emptyList());
+
+        MethodArgumentNotValidException thrown = assertThrows(MethodArgumentNotValidException.class, () -> {
+            if (!violations.isEmpty()) {
+                throw new MethodArgumentNotValidException(null, bindingResult);
+            }
+            expenseService.addExpense(invalidExpense);
+        });
+
+        // Use the mocked GlobalExceptionHandler to handle the exception
+        ResponseEntity<Map<String, String>> response = globalExceptionHandler.handleValidationExceptions(thrown);
+        Map<String, String> errors = response.getBody();
+
+        assert errors != null;
+        assertTrue(errors.containsKey("category"));
+        assertTrue(errors.containsKey("amount"));
+        assertTrue(errors.containsKey("userId"));
+    }
+
+
+    }
+
+
+

@@ -1,8 +1,11 @@
 package org.example.budgetmanager.controller;
 
+import jakarta.validation.Valid;
 import org.example.budgetmanager.model.Expense;
 import org.example.budgetmanager.service.impl.ExpenseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +33,6 @@ public class ExpenseController {
         // Retrieve expenses for the user
         Optional<List<Expense>> expenses = expenseService.getExpensesForUser(userId);
         return ResponseEntity.ok(expenses.orElse(Collections.emptyList()));
-
     }
 
     @GetMapping("/{expenseId}")
@@ -40,6 +42,21 @@ public class ExpenseController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(expense);
+    }
+
+    @PostMapping("")
+    public ResponseEntity<Expense> addExpense(@Valid @RequestBody Expense expense) {
+        Expense expenseBuild = Expense.builder()
+                .id(expense.getId())
+                .category(expense.getCategory())
+                .description(expense.getDescription())
+                .amount(expense.getAmount())
+                .date(expense.getDate())
+                .userId(expense.getUserId())
+                .build();
+
+        expenseService.addExpense(expenseBuild);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 }

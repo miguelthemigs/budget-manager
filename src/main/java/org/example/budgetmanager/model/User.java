@@ -10,13 +10,14 @@ import  jakarta.validation.constraints.NotNull;
 @Getter
 @Setter
 public class User {
-    @NotNull
+    @NotNull(message = "ID cannot be null")
     private Long id;
-    @NotNull
+    @NotNull(message = "Name cannot be null")
     private String name;
-    @NotNull
+    @NotNull(message = "Email cannot be null")
     private String email;
     @JsonIgnore
+    @NotNull(message = "Password cannot be null")
     private String password;
 
 

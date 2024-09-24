@@ -1,5 +1,6 @@
 package org.example.budgetmanager.controller;
 
+import jakarta.validation.Valid;
 import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user){
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user){
         userService.addUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
