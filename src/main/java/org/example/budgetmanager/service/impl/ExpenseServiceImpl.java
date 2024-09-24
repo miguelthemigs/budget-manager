@@ -41,4 +41,24 @@ public class ExpenseServiceImpl implements ExpenseService {
         return expensesRepository.findExpenseById(expenseId)
                 .orElseThrow(() -> new IllegalArgumentException("Expense with ID " + expenseId + " not found"));
     }
+
+    public void deleteExpense(Long expenseId) {
+        expensesRepository.deleteExpense(expenseId);
+    }
+
+    public void updateExpense(Expense expense) {
+        if (expense == null) {
+            throw new IllegalArgumentException("Expense cannot be null");
+        }
+        else if (expense.getId() == null) {
+            throw new IllegalArgumentException("Expense ID cannot be null");
+        }
+        if (expense.getCategory() == null || expense.getCategory().isEmpty()) {
+            throw new IllegalArgumentException("Expense category cannot be null or empty");
+        }
+        if (expense.getAmount() <= 0) {
+            throw new IllegalArgumentException("Expense amount must be greater than zero");
+        }
+        expensesRepository.updateExpense(expense);
+    }
 }

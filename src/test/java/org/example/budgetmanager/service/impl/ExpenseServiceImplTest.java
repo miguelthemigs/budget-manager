@@ -183,8 +183,52 @@ class ExpenseServiceImplTest {
         assertTrue(errors.containsKey("userId"));
     }
 
-
+    @Test
+    void deleteExpense() {
+        Long expenseId = 1L;
+        expenseService.deleteExpense(expenseId);
+        verify(expensesRepository, times(1)).deleteExpense(expenseId);
     }
+
+    @Test
+    void updateExpense_ValidExpense() {
+        Expense expense = new Expense(1L, "Food", "Lunch", 15.50, "2024-09-24", 1L);
+        expenseService.updateExpense(expense);
+        verify(expensesRepository, times(1)).updateExpense(expense);
+    }
+
+    @Test
+    void updateExpense_NullExpense() {
+        Expense nullExpense = null;
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            expenseService.updateExpense(nullExpense);
+        });
+
+        // No repository interaction should happen
+        verify(expensesRepository, never()).updateExpense(nullExpense);
+    }
+
+    @Test
+    void updateExpense_MissingExpenseId() {
+        Expense expenseWithoutId = new Expense(null, "Food", "Lunch", 15.50, "2024-09-24", 1L);
+        assertThrows(IllegalArgumentException.class, () -> {
+            expenseService.updateExpense(expenseWithoutId);
+        });
+        verify(expensesRepository, never()).updateExpense(expenseWithoutId);
+    }
+
+    @Test
+    void updateExpense_MissingExpenseFields() {
+        Expense invalidExpense = new Expense(1L, null, null, 0.1, "2024-09-24", 1L);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            expenseService.updateExpense(invalidExpense);
+        });
+        assertEquals("Expense category cannot be null or empty", exception.getMessage());
+        verify(expensesRepository, never()).updateExpense(any());
+    }
+
+}
 
 
 

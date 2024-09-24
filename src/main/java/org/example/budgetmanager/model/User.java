@@ -17,7 +17,6 @@ public class User {
     @NotNull(message = "Email cannot be null")
     private String email;
     @JsonIgnore
-    @NotNull(message = "Password cannot be null")
     private String password;
 
 

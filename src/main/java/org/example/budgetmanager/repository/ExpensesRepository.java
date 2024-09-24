@@ -11,4 +11,6 @@ public interface ExpensesRepository  {
     void addExpense(Expense expense);
     List<Expense> getExpensesForUser(Long userId);
     Optional<Expense> findExpenseById(Long expenseId);
+    void deleteExpense(Long expenseId);
+    void updateExpense(Expense expense);
 }

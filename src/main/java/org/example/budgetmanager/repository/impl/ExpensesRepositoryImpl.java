@@ -51,6 +51,29 @@ public class ExpensesRepositoryImpl implements ExpensesRepository {
                 .findFirst();
     }
 
+    public void deleteExpense(Long expenseId) {
+        userExpensesMap.values().forEach(expenses -> expenses.removeIf(expense -> expense.getId().equals(expenseId)));
+    }
+
+    public void updateExpense(Expense expense) {
+        Long userId = expense.getUserId();
+        User user = userRepository.findById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("User does not exist");
+        }
+        List<Expense> expenses = userExpensesMap.get(userId);
+        if (expenses == null) {
+            throw new IllegalArgumentException("User does not have any expenses");
+        }
+        Optional<Expense> existingExpense = expenses.stream()
+                .filter(e -> e.getId().equals(expense.getId()))
+                .findFirst();
+        if (existingExpense.isEmpty()) {
+            throw new IllegalArgumentException("Expense does not exist");
+        }
+        expenses.remove(existingExpense.get());
+        expenses.add(expense);
+    }
 
 
 }

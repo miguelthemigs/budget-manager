@@ -59,4 +59,17 @@ public class ExpenseController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @DeleteMapping("/{expenseId}")
+    public ResponseEntity<Void> deleteExpense(@PathVariable("expenseId") Long expenseId) {
+        expenseService.deleteExpense(expenseId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PutMapping("/{expenseId}")
+    public ResponseEntity<Void> updateExpense(@PathVariable("expenseId") Long expenseId, @RequestBody Expense expense) {
+        expense.setId(expenseId);
+        expenseService.updateExpense(expense);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }
