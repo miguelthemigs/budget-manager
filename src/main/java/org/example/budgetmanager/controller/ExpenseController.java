@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController // handles incoming requests, calls the Service
 @RequestMapping("/expenses")
@@ -19,13 +21,25 @@ public class ExpenseController {
         this.expenseService = expenseService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<Expense>> getExpensesForUser(@PathVariable("id") Long userId) {
-        List<Expense> expenses = expenseService.getExpensesForUser(userId);
+    @GetMapping("")
+    // ex: http://localhost:8080/expenses?userId=1
+    public ResponseEntity<List<Expense>> getExpensesForUser(@RequestParam("userId") Long userId) {
         if (userId == null) {
+            return ResponseEntity.badRequest().body(null); // Return 400 Bad Request if userId is null
+        }
+        // Retrieve expenses for the user
+        Optional<List<Expense>> expenses = expenseService.getExpensesForUser(userId);
+        return ResponseEntity.ok(expenses.orElse(Collections.emptyList()));
+
+    }
+
+    @GetMapping("/{expenseId}")
+    public ResponseEntity<Expense> getExpenseById(@PathVariable("expenseId") Long expenseId) {
+        Expense expense = expenseService.getExpenseById(expenseId);
+        if (expenseId == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(expenses);
+        return ResponseEntity.ok(expense);
     }
 
 }
