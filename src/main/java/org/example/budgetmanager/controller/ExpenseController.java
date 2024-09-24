@@ -1,12 +1,15 @@
 package org.example.budgetmanager.controller;
 
+import org.example.budgetmanager.model.Expense;
 import org.example.budgetmanager.service.impl.ExpenseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController // handles incoming requests, calls the Service
-@RequestMapping("/expense")
+@RequestMapping("/expenses")
 public class ExpenseController {
 
     private final ExpenseServiceImpl expenseService;
@@ -16,6 +19,13 @@ public class ExpenseController {
         this.expenseService = expenseService;
     }
 
-
+    @GetMapping("/{id}")
+    public ResponseEntity<List<Expense>> getExpensesForUser(@PathVariable("id") Long userId) {
+        List<Expense> expenses = expenseService.getExpensesForUser(userId);
+        if (userId == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(expenses);
+    }
 
 }

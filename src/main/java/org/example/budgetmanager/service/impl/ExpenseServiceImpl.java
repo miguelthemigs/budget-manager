@@ -21,4 +21,18 @@ public class ExpenseServiceImpl implements ExpenseService {
         }
 
 
+    @Override
+    public void addExpense(Expense expense) {
+        expensesRepository.addExpense(expense);
+    }
+
+    @Override
+    public List<Expense> getExpensesForUser(Long userId) {
+        List<Expense> expenses = expensesRepository.getExpensesForUser(userId);
+
+        if (expenses.isEmpty()) {
+            throw new IllegalArgumentException("User with ID " + userId + " not found");
+        }
+        return expenses;
+    }
 }
