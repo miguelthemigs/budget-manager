@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import  jakarta.validation.constraints.NotNull;
 
+import java.util.Map;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -18,6 +20,9 @@ public class User {
     private String email;
     @JsonIgnore
     private String password;
-
+    private double balance = 0.0;
+    private Currency preferredCurrency;
+    private double monthlyBudget;
+    private Map<Category, Double> categoryBudgets;
 
 }

@@ -26,6 +26,10 @@ public class UserController {
                     .id(user.getId())
                     .email(user.getEmail())
                     .name(user.getName())
+                    .monthlyBudget(user.getMonthlyBudget())
+                    .preferredCurrency(user.getPreferredCurrency())
+                    .balance(user.getBalance())
+                    .categoryBudgets(user.getCategoryBudgets())
                     .build());
         } else {
             return ResponseEntity.notFound().build();  // Return 404 if user is not found

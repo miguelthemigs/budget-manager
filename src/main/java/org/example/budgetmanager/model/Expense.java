@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.validator.constraints.UniqueElements;
 
+import java.util.Map;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -15,7 +17,7 @@ public class Expense {
     private Long id; // Can be null for new expenses
 
     @NotNull(message = "Category cannot be null")
-    private String category;
+    private Category category;
 
     private String description; // optional
 
@@ -28,6 +30,8 @@ public class Expense {
 
     @NotNull(message = "User ID cannot be null")
     private Long userId;
+
+
 
 
 

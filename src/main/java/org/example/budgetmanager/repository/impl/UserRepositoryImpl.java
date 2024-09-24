@@ -1,5 +1,7 @@
 package org.example.budgetmanager.repository.impl;
 
+import org.example.budgetmanager.model.Category;
+import org.example.budgetmanager.model.Currency;
 import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.repository.UserRepository;
 import org.springframework.stereotype.Repository;
@@ -13,17 +15,22 @@ public class UserRepositoryImpl implements UserRepository {
 
     // Constructor to add some sample users to the simulated database
     public UserRepositoryImpl() {
-        User user1 = new User(1L, "John Doe", "test@example.com", "password123");
-        User user2 = new User(2L, "Jane Doe", "jane@example.com", "password456");
-
+        Map<Category, Double> budgets = new HashMap<>();
+        User user1 = new User(1L, "John Doe", "test@example.com", "password123", 500.0, Currency.BRL, 1000.0, budgets);
+        User user2 = new User(2L, "Jane Doe", "jane@example.com", "password456", 1000.0, Currency.USD, 2000.0, budgets);
+        budgets.put(Category.RESTAURANTS, 100.0);
+        budgets.put(Category.TRANSPORTATION, 200.0);
         usersDatabase.put(user1.getId(), user1);
         usersDatabase.put(user2.getId(), user2);
     }
 
     // Method to add sample data for testing
     private void populateSampleData() {
-        User user1 = new User(1L, "John Doe", "test@example.com", "password123");
-        User user2 = new User(2L, "Jane Doe", "jane@example.com", "password456");
+        Map<Category, Double> budgets = new HashMap<>();
+        budgets.put(Category.RESTAURANTS, 100.0);
+        budgets.put(Category.TRANSPORTATION, 200.0);
+        User user1 = new User(1L, "John Doe", "test@example.com", "password123", 500.0, Currency.BRL, 1000.0, budgets);
+        User user2 = new User(2L, "Jane Doe", "jane@example.com", "password456", 1000.0, Currency.USD, 2000.0, budgets);
         usersDatabase.put(user1.getId(), user1);
         usersDatabase.put(user2.getId(), user2);
     }

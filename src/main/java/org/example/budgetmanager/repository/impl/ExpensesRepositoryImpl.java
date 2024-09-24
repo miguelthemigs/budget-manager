@@ -1,5 +1,6 @@
 package org.example.budgetmanager.repository.impl;
 
+import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.Expense;
 import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.repository.ExpensesRepository;
@@ -16,12 +17,12 @@ public class ExpensesRepositoryImpl implements ExpensesRepository {
         this.userRepository = userRepository;
 
         List<Expense> user1Expenses = new ArrayList<>();
-        user1Expenses.add(new Expense(1L, "Food", "Lunch", 10.5, "2024-09-24", 1L));
-        user1Expenses.add(new Expense(2L, "Transport", "Bus Ticket", 2.75, "2024-09-23", 1L));
+        user1Expenses.add(new Expense(1L, Category.RESTAURANTS, "Lunch", 10.5, "2024-09-24", 1L));
+        user1Expenses.add(new Expense(2L, Category.TRANSPORTATION, "Bus Ticket", 2.75, "2024-09-23", 1L));
 
         List<Expense> user2Expenses = new ArrayList<>();
-        user2Expenses.add(new Expense(3L, "Entertainment", "Movie", 12.0, "2024-09-22", 2L));
-        user2Expenses.add(new Expense(4L, "Groceries", "Weekly groceries", 50.0, "2024-09-21", 2L));
+        user2Expenses.add(new Expense(3L, Category.ENTERTAINMENT, "Movie", 12.0, "2024-09-22", 2L));
+        user2Expenses.add(new Expense(4L, Category.GROCERIES, "Weekly groceries", 50.0, "2024-09-21", 2L));
 
         userExpensesMap.put(1L, user1Expenses);
         userExpensesMap.put(2L, user2Expenses);
@@ -71,6 +72,7 @@ public class ExpensesRepositoryImpl implements ExpensesRepository {
         if (existingExpense.isEmpty()) {
             throw new IllegalArgumentException("Expense does not exist");
         }
+
         expenses.remove(existingExpense.get());
         expenses.add(expense);
     }

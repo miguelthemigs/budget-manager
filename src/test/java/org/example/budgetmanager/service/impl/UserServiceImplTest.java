@@ -1,5 +1,6 @@
 package org.example.budgetmanager.service.impl;
 
+import org.example.budgetmanager.model.Currency;
 import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.repository.impl.UserRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +33,7 @@ class UserServiceImplTest {
         MockitoAnnotations.openMocks(this);
 
         // Create a sample user object for testing
-        user = new User(1L, "John Doe", "john@example.com", "password123");
+        user = new User(1L, "John Doe", "john@example.com", "password123", 500.0, Currency.AUD, 1000.0, null);
     }
 
     @Test

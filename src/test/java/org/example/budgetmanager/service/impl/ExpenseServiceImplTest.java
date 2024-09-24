@@ -1,6 +1,8 @@
 package org.example.budgetmanager.service.impl;
 
 import jakarta.validation.*;
+import org.example.budgetmanager.model.Category;
+import org.example.budgetmanager.model.Currency;
 import org.example.budgetmanager.model.Expense;
 import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.repository.ExpensesRepository;
@@ -44,7 +46,7 @@ class ExpenseServiceImplTest {
     @Test
     void addExpense() {
         // Arrange
-        Expense expense = new Expense(1L, "Food", "Lunch", 15.50, "2024-09-24", 1L);
+        Expense expense = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", 1L);
 
         // Act
         expenseService.addExpense(expense);
@@ -56,9 +58,9 @@ class ExpenseServiceImplTest {
     @Test
     void getExpensesForUser_UserExistsWithExpenses() {
         Long userId = 1L;
-        User user = new User(userId, "John Doe", "john@example.com", "password");
-        Expense expense1 = new Expense(1L, "Food", "Lunch", 15.50, "2024-09-24", userId);
-        Expense expense2 = new Expense(2L, "Transport", "Bus Ticket", 2.50, "2024-09-24", userId);
+        User user = new User(userId, "John Doe", "john@example.com", "password", 500.0, Currency.BRL, 1000.0, null);
+        Expense expense1 = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", userId);
+        Expense expense2 = new Expense(2L, Category.TRANSPORTATION, "Bus Ticket", 2.50, "2024-09-24", userId);
         List<Expense> expenses = List.of(expense1, expense2);
 
         when(userRepository.findById(userId)).thenReturn(user);
@@ -77,7 +79,7 @@ class ExpenseServiceImplTest {
     @Test
     void getExpensesForUser_UserExistsNoExpenses() {
         Long userId = 2L;
-        User user = new User(userId, "Jane Doe", "jane@example.com", "password");
+        User user = new User(userId, "Jane Doe", "jane@example.com", "password", 1000.0, Currency.CHF, 2000.0, null);
 
         when(userRepository.findById(userId)).thenReturn(user);
         when(expensesRepository.getExpensesForUser(userId)).thenReturn(null);
@@ -105,7 +107,7 @@ class ExpenseServiceImplTest {
     @Test
     void getExpenseById_ExpenseExists() {
         Long expenseId = 1L;
-        Expense expense = new Expense(expenseId, "Food", "Lunch", 15.50, "2024-09-24", 1L);
+        Expense expense = new Expense(expenseId, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", 1L);
 
         when(expensesRepository.findExpenseById(expenseId)).thenReturn(Optional.of(expense));
 
@@ -133,7 +135,7 @@ class ExpenseServiceImplTest {
 
     @Test
     void addExpense_ValidExpense() {
-        Expense expense = new Expense(1L, "Food", "Lunch", 15.50, "2024-09-24", 1L);
+        Expense expense = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", 1L);
         expenseService.addExpense(expense);
         verify(expensesRepository, times(1)).addExpense(expense);
         assertEquals(1, expense.getUserId());
@@ -192,7 +194,7 @@ class ExpenseServiceImplTest {
 
     @Test
     void updateExpense_ValidExpense() {
-        Expense expense = new Expense(1L, "Food", "Lunch", 15.50, "2024-09-24", 1L);
+        Expense expense = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", 1L);
         expenseService.updateExpense(expense);
         verify(expensesRepository, times(1)).updateExpense(expense);
     }
@@ -211,7 +213,7 @@ class ExpenseServiceImplTest {
 
     @Test
     void updateExpense_MissingExpenseId() {
-        Expense expenseWithoutId = new Expense(null, "Food", "Lunch", 15.50, "2024-09-24", 1L);
+        Expense expenseWithoutId = new Expense(null, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", 1L);
         assertThrows(IllegalArgumentException.class, () -> {
             expenseService.updateExpense(expenseWithoutId);
         });
@@ -224,7 +226,7 @@ class ExpenseServiceImplTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             expenseService.updateExpense(invalidExpense);
         });
-        assertEquals("Expense category cannot be null or empty", exception.getMessage());
+        assertEquals("Expense category cannot be null", exception.getMessage());
         verify(expensesRepository, never()).updateExpense(any());
     }
 

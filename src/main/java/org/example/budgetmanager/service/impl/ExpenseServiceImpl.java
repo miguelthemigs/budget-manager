@@ -53,8 +53,8 @@ public class ExpenseServiceImpl implements ExpenseService {
         else if (expense.getId() == null) {
             throw new IllegalArgumentException("Expense ID cannot be null");
         }
-        if (expense.getCategory() == null || expense.getCategory().isEmpty()) {
-            throw new IllegalArgumentException("Expense category cannot be null or empty");
+        if (expense.getCategory() == null){
+            throw new IllegalArgumentException("Expense category cannot be null");
         }
         if (expense.getAmount() <= 0) {
             throw new IllegalArgumentException("Expense amount must be greater than zero");
