@@ -1,5 +1,6 @@
 package org.example.budgetmanager.service.impl;
 
+import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.repository.impl.UserRepositoryImpl;
 import org.example.budgetmanager.service.UserService;
@@ -36,4 +37,13 @@ public class UserServiceImpl implements UserService {
         } catch (IllegalArgumentException e) {
             throw e;
         }
-}}
+    }
+
+    public void defineMonthlyBudget(Long id, double budget) {
+        userRepositoryImpl.defineMonthlyBudget(id, budget);
+    }
+
+    public void setCategoryBudget(Long id, double budget, Category category) {
+        userRepositoryImpl.setCategoryBudget(id, budget, category);
+    }
+}

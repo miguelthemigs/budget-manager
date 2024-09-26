@@ -75,4 +75,20 @@ public class UserRepositoryImpl implements UserRepository {
 
         usersDatabase.put(userId, user);
     }
+
+    public void defineMonthlyBudget(Long id, double amount) {
+        User user = findById(id);
+        if (user == null) {
+            throw new IllegalArgumentException("User does not exist");
+        }
+        user.setMonthlyBudget(amount);
+    }
+
+    public void setCategoryBudget(Long id, double budget, Category category) {
+        User user = findById(id);
+        if (user == null) {
+            throw new IllegalArgumentException("User does not exist");
+        }
+        user.getCategoryBudgets().put(category, budget);
+    }
 }
