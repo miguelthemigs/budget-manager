@@ -56,15 +56,15 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/{id}/setMonthlyBudget")
-    // ex: http://localhost:8080/user/1/setMonthlyBudget?budget=1200 to set the monthly budget for user with id 1 to 1200
+    @PatchMapping("/{id}/monthlyBudget")
+    // ex: http://localhost:8080/user/1/monthlyBudget?budget=1200 to set the monthly budget for user with id 1 to 1200
     public ResponseEntity<User> defineMonthlyBudget(@PathVariable("id") Long id, @RequestParam("budget") double budget) {
         userService.defineMonthlyBudget(id, budget);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/{id}/setCategoryBudget")
-    // ex: http://localhost:8080/user/1/setCategoryBudget?budget=125&category=RESTAURANTS to set the budget for category FOOD for user with id 1 to 1200
+    @PatchMapping("/{id}/categoryBudget")
+    // ex: http://localhost:8080/user/1/categoryBudget?budget=125&category=RESTAURANTS to set the budget for category FOOD for user with id 1 to 1200
     public ResponseEntity<User> setCategoryBudget(@PathVariable("id") Long id, @RequestParam("budget") double budget, @RequestParam("category") String category) {
         userService.setCategoryBudget(id, budget, Category.valueOf(category));
         return ResponseEntity.status(HttpStatus.OK).build();
