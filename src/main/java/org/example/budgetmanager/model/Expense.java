@@ -12,6 +12,7 @@ import java.util.Map;
 @Builder
 @Getter
 @Setter
+@Data
 public class Expense {
     @NotNull(message = "ID cannot be null")
     private Long id; // Can be null for new expenses

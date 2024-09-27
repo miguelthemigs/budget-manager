@@ -3,6 +3,7 @@ package org.example.budgetmanager.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import  jakarta.validation.constraints.NotNull;
+import org.springframework.context.annotation.Bean;
 
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import java.util.Map;
 @Builder
 @Getter
 @Setter
+@Data
 public class User {
     @NotNull(message = "ID cannot be null")
     private Long id;
