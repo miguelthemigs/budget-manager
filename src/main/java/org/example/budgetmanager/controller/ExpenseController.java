@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController // handles incoming requests, calls the Service
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/expenses")
 public class ExpenseController {
 
