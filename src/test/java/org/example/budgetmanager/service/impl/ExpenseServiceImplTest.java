@@ -42,16 +42,19 @@ class ExpenseServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
+    // Using "when" is necessary to simulate the behavior of repository methods in unit tests.
+    // This ensures we are not calling the actual repository but a mock instead.
+    // It isolates the service logic from external dependencies, like databases.
+    // In unit tests, we focus on testing only the service, not the repository or database logic.
+    // Without "when", the mock repository returns null or default values, causing the test to fail.
+    // "when" defines what the mock should return when a specific method is called.
+    // This allows us to control and verify the service behavior under test conditions.
     @Test
     void addExpense() {
-        // Arrange
         Expense expense = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", 1L);
 
-        // Act
         expenseService.addExpense(expense);
 
-        // Assert
         verify(expensesRepository, times(1)).addExpense(expense);
     }
 
@@ -81,11 +84,10 @@ class ExpenseServiceImplTest {
         Long userId = 2L;
         User user = new User(userId, "Jane Doe", "jane@example.com", "password", 1000.0, Currency.CHF, 2000.0, null);
 
-        when(userRepository.findById(userId)).thenReturn(user);
-        when(expensesRepository.getExpensesForUser(userId)).thenReturn(null);
+     when(userRepository.findById(userId)).thenReturn(user);
+     when(expensesRepository.getExpensesForUser(userId)).thenReturn(null);
 
         Optional<List<Expense>> result = expenseService.getExpensesForUser(userId);
-
         assertTrue(result.isEmpty());
         verify(userRepository, times(1)).findById(userId);
         verify(expensesRepository, times(1)).getExpensesForUser(userId);
@@ -120,12 +122,10 @@ class ExpenseServiceImplTest {
 
     @Test
     void getExpenseById_ExpenseDoesNotExist() {
-        // Arrange
         Long expenseId = 2L;
 
         when(expensesRepository.findExpenseById(expenseId)).thenReturn(Optional.empty());
 
-        // Act & Assert
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
             expenseService.getExpenseById(expenseId);
         });
