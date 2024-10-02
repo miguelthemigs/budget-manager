@@ -32,10 +32,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     public Optional<List<Expense>> getExpensesForUser(Long userId) {
         User user = userRepository.findById(userId);
         if (user == null) {
-            throw new IllegalArgumentException("User with ID " + userId + " does not exist");
+            throw new IllegalArgumentException("User with ID " + userId + " not found");
         }
         return Optional.ofNullable(expensesRepository.getExpensesForUser(userId));
     }
+
 
     public Expense getExpenseById(Long expenseId) {
         return expensesRepository.findExpenseById(expenseId)

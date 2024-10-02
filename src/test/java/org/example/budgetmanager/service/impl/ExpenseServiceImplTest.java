@@ -1,10 +1,8 @@
 package org.example.budgetmanager.service.impl;
 
 import jakarta.validation.*;
-import org.example.budgetmanager.model.Category;
+import org.example.budgetmanager.model.*;
 import org.example.budgetmanager.model.Currency;
-import org.example.budgetmanager.model.Expense;
-import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.repository.ExpensesRepository;
 import org.example.budgetmanager.repository.UserRepository;
 import org.example.budgetmanager.service.exeptions.GlobalExceptionHandler;
@@ -67,7 +65,7 @@ class ExpenseServiceImplTest {
     @Test
     void getExpensesForUser_UserExistsWithExpenses() {
         Long userId = 1L;
-        User user = new User(userId, "John Doe", "john@example.com", "password", 500.0, Currency.BRL, 1000.0, null);
+        User user = new User(userId, "John Doe", "john@example.com", "password", 500.0, Currency.BRL, 1000.0, null, Role.USER);
         Expense expense1 = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, expenseDate, userId);
         Expense expense2 = new Expense(2L, Category.TRANSPORTATION, "Bus Ticket", 2.50, expenseDate, userId);
         List<Expense> expenses = List.of(expense1, expense2);
@@ -89,7 +87,7 @@ class ExpenseServiceImplTest {
     void getExpensesForUser_UserExistsNoExpenses() {
         Long userId = 2L;
 
-        User user = new User(userId, "Jane Doe", "jane@example.com", "password", 1000.0, Currency.CHF, 2000.0, null);
+        User user = new User(userId, "Jane Doe", "jane@example.com", "password", 1000.0, Currency.CHF, 2000.0, null, Role.USER);
 
      when(userRepository.findById(userId)).thenReturn(user);
      when(expensesRepository.getExpensesForUser(userId)).thenReturn(null);
