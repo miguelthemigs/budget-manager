@@ -18,6 +18,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,6 +39,10 @@ class ExpenseServiceImplTest {
 
     @Mock
     private GlobalExceptionHandler globalExceptionHandler;
+    static String dateString = "2024-09-24"; // The date as a String
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static LocalDate expenseDate = LocalDate.parse(dateString, formatter); // Convert String to LocalDate
+
 
     @BeforeEach
     void setUp() {
@@ -51,7 +57,7 @@ class ExpenseServiceImplTest {
     // This allows us to control and verify the service behavior under test conditions.
     @Test
     void addExpense() {
-        Expense expense = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", 1L);
+        Expense expense = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, expenseDate, 1L);
 
         expenseService.addExpense(expense);
 
@@ -62,8 +68,8 @@ class ExpenseServiceImplTest {
     void getExpensesForUser_UserExistsWithExpenses() {
         Long userId = 1L;
         User user = new User(userId, "John Doe", "john@example.com", "password", 500.0, Currency.BRL, 1000.0, null);
-        Expense expense1 = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", userId);
-        Expense expense2 = new Expense(2L, Category.TRANSPORTATION, "Bus Ticket", 2.50, "2024-09-24", userId);
+        Expense expense1 = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, expenseDate, userId);
+        Expense expense2 = new Expense(2L, Category.TRANSPORTATION, "Bus Ticket", 2.50, expenseDate, userId);
         List<Expense> expenses = List.of(expense1, expense2);
 
         when(userRepository.findById(userId)).thenReturn(user);
@@ -82,6 +88,7 @@ class ExpenseServiceImplTest {
     @Test
     void getExpensesForUser_UserExistsNoExpenses() {
         Long userId = 2L;
+
         User user = new User(userId, "Jane Doe", "jane@example.com", "password", 1000.0, Currency.CHF, 2000.0, null);
 
      when(userRepository.findById(userId)).thenReturn(user);
@@ -109,7 +116,8 @@ class ExpenseServiceImplTest {
     @Test
     void getExpenseById_ExpenseExists() {
         Long expenseId = 1L;
-        Expense expense = new Expense(expenseId, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", 1L);
+
+        Expense expense = new Expense(expenseId, Category.RESTAURANTS, "Lunch", 15.50, expenseDate, 1L);
 
         when(expensesRepository.findExpenseById(expenseId)).thenReturn(Optional.of(expense));
 
@@ -135,7 +143,7 @@ class ExpenseServiceImplTest {
 
     @Test
     void addExpense_ValidExpense() {
-        Expense expense = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", 1L);
+        Expense expense = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, expenseDate, 1L);
         expenseService.addExpense(expense);
         verify(expensesRepository, times(1)).addExpense(expense);
         assertEquals(1, expense.getUserId());
@@ -194,7 +202,7 @@ class ExpenseServiceImplTest {
 
     @Test
     void updateExpense_ValidExpense() {
-        Expense expense = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", 1L);
+        Expense expense = new Expense(1L, Category.RESTAURANTS, "Lunch", 15.50, expenseDate, 1L);
         expenseService.updateExpense(expense);
         verify(expensesRepository, times(1)).updateExpense(expense);
     }
@@ -213,7 +221,7 @@ class ExpenseServiceImplTest {
 
     @Test
     void updateExpense_MissingExpenseId() {
-        Expense expenseWithoutId = new Expense(null, Category.RESTAURANTS, "Lunch", 15.50, "2024-09-24", 1L);
+        Expense expenseWithoutId = new Expense(null, Category.RESTAURANTS, "Lunch", 15.50, expenseDate, 1L);
         assertThrows(IllegalArgumentException.class, () -> {
             expenseService.updateExpense(expenseWithoutId);
         });
@@ -222,7 +230,7 @@ class ExpenseServiceImplTest {
 
     @Test
     void updateExpense_MissingExpenseFields() {
-        Expense invalidExpense = new Expense(1L, null, null, 0.1, "2024-09-24", 1L);
+        Expense invalidExpense = new Expense(1L, null, null, 0.1, expenseDate, 1L);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             expenseService.updateExpense(invalidExpense);
         });
