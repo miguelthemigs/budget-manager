@@ -1,4 +1,4 @@
-package org.example.budgetmanager.model;
+package org.example.budgetmanager.repository.entity;
 
 import aj.org.objectweb.asm.TypeReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import lombok.*;
 import  jakarta.validation.constraints.NotNull;
+import org.example.budgetmanager.model.Category;
+import org.example.budgetmanager.model.Currency;
+import org.example.budgetmanager.model.Role;
 import org.springframework.context.annotation.Bean;
 
 import java.util.HashMap;
@@ -19,19 +22,14 @@ import java.util.UUID;
 @Getter
 @Setter
 @Data
-@Entity  // Mark this class as a JPA entity
-@Table(name = "users")  // Map this entity to the "users" table in the database
-public class User {
-
-    @NotNull(message = "ID cannot be null")
+@Entity
+@Table(name = "users")
+public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generate sequential IDs (1, 2, 3, ...)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Name cannot be null")
     private String name;
-
-    @NotNull(message = "Email cannot be null")
     private String email;
 
     @JsonIgnore
@@ -40,14 +38,10 @@ public class User {
     @Builder.Default
     private double balance = 0.0;
 
-    @Enumerated(EnumType.STRING)
     private Currency preferredCurrency;
 
     private double monthlyBudget;
-
-    @Enumerated(EnumType.STRING)
     private Role role;
 
-
-
 }
+

@@ -1,54 +1,63 @@
 package org.example.budgetmanager.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.User;
+import org.example.budgetmanager.repository.UserRepository;
+import org.example.budgetmanager.repository.entity.UserEntity;
+
 import org.example.budgetmanager.repository.impl.UserRepositoryImpl;
-import org.example.budgetmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
+
+import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl{
 
+    private final UserRepository userRepository;
     private final UserRepositoryImpl userRepositoryImpl;
 
     @Autowired
-    public UserServiceImpl(UserRepositoryImpl userRepositoryImpl) {
+    public UserServiceImpl(UserRepository userRepository, UserRepositoryImpl userRepositoryImpl) {
+        this.userRepository = userRepository;
         this.userRepositoryImpl = userRepositoryImpl;
     }
 
-    public User findById(Long id) {
-        return userRepositoryImpl.findById(id);
+    public Optional<UserEntity> findById(Long id) {
+        return userRepository.findById(id);
     }
 
-    public void addUser(User user) {
-        userRepositoryImpl.addUser(user);
+    public void addUser(UserEntity user) {
+        userRepository.save(user);
     }
 
     public void deleteUser(Long id) {
-        userRepositoryImpl.deleteUser(id);
+        userRepository.deleteById(id);
     }
 
-    public void editUser(@Valid User user) {
+    public void editUser(@Valid UserEntity user) {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
        else if (user.getId() == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
-        userRepositoryImpl.editUser(user);
+        userRepository.save(user);
 }
 
 
-    public void defineMonthlyBudget(Long id, double budget) {
-        userRepositoryImpl.defineMonthlyBudget(id, budget);
-    }
 
-    public void setCategoryBudget(Long id, double budget, Category category) {
-        userRepositoryImpl.setCategoryBudget(id, budget, category);
+    public void defineMonthlyBudget(Long id, double budget) {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        user.setMonthlyBudget(budget);
+        userRepository.save(user);
     }
+//
+//    public void setCategoryBudget(Long id, double budget, Category category) {
+//        userRepositoryImpl.setCategoryBudget(id, budget, category);
+//    }
 }
