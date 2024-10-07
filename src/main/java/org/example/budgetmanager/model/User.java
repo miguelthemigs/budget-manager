@@ -21,7 +21,6 @@ public class User {
     @NotNull(message = "Email cannot be null")
     private String email;
 
-
     private String password;
 
     @Builder.Default
