@@ -38,9 +38,12 @@ public class UserEntity {
     @Builder.Default
     private double balance = 0.0;
 
+    @Enumerated(EnumType.STRING)
     private Currency preferredCurrency;
 
     private double monthlyBudget;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
 
 }

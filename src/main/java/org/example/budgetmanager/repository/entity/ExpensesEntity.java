@@ -22,6 +22,7 @@ public class ExpensesEntity {
     private Long id;
 
     @NotNull(message = "Category cannot be null")
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     private String description;

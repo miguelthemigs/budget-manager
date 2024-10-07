@@ -21,7 +21,7 @@ public class User {
     @NotNull(message = "Email cannot be null")
     private String email;
 
-    @JsonIgnore
+
     private String password;
 
     @Builder.Default
