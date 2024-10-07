@@ -57,7 +57,7 @@ jobs:
 
       - name: Wait for PostgreSQL to be ready
         run: |
-          while ! pg_isready -h localhost -U your_username; do
+          while ! pg_isready -h localhost -U postgres; do
             sleep 1
           done
 
