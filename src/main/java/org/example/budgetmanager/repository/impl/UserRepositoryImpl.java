@@ -16,19 +16,5 @@ import java.util.Optional;
 public class UserRepositoryImpl {
     private UserRepository userRepository;
 
-//    public void defineMonthlyBudget(Long id, double amount) {
-//        UserEntity user = userRepository.findById(id).orElse(null);
-//        if (user == null) {
-//            throw new IllegalArgumentException("User does not exist");
-//        }
-//        user.setMonthlyBudget(amount);
-    }
-
-//    public void setCategoryBudget(Long id, double budget, Category category) {
-//        User user = findById(id);
-//        if (user == null) {
-//            throw new IllegalArgumentException("User does not exist");
-//        }
-//        user.getCategoryBudgets().put(category, budget);
-//    }
+  }
 
