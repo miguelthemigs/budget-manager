@@ -63,7 +63,7 @@ jobs:
 
       - name: Run tests
         env:
-          DATABASE_URL: jdbc:postgresql://localhost:5432/your_database
-          DATABASE_USERNAME: your_username
-          DATABASE_PASSWORD: your_password
+          DATABASE_URL: jdbc:postgresql://localhost:5432/budgetapp
+          DATABASE_USERNAME: postgres
+          DATABASE_PASSWORD: postgres
         run: ./gradlew test
