@@ -13,7 +13,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@RestController // handles incoming requests, calls the Service
+@RestController // Handles incoming requests, calls the Service
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/expenses")
 public class ExpenseController {
 
@@ -25,11 +26,12 @@ public class ExpenseController {
     }
 
     @GetMapping("")
-    // ex: http://localhost:8080/expenses?userId=1
+    // Ex: http://localhost:8080/expenses?userId=1
     public ResponseEntity<List<Expense>> getExpensesForUser(@RequestParam("userId") Long userId) {
         if (userId == null) {
-            return ResponseEntity.badRequest().body(null); // Return 400 Bad Request if userId is null
+            return ResponseEntity.badRequest().build(); // Return 400 Bad Request if userId is null
         }
+
         // Retrieve expenses for the user
         Optional<List<Expense>> expenses = expenseService.getExpensesForUser(userId);
         return ResponseEntity.ok(expenses.orElse(Collections.emptyList()));
@@ -37,17 +39,19 @@ public class ExpenseController {
 
     @GetMapping("/{expenseId}")
     public ResponseEntity<Expense> getExpenseById(@PathVariable("expenseId") Long expenseId) {
-        Expense expense = expenseService.getExpenseById(expenseId);
         if (expenseId == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().build(); // Return 400 if expenseId is null
         }
+
+        Expense expense = expenseService.getExpenseById(expenseId);
         return ResponseEntity.ok(expense);
     }
 
     @PostMapping("")
     public ResponseEntity<Expense> addExpense(@Valid @RequestBody Expense expense) {
+        // Use the builder pattern to create an Expense instance
         Expense expenseBuild = Expense.builder()
-                .id(expense.getId())
+                .id(expense.getId()) // Should be null for a new expense
                 .category(expense.getCategory())
                 .description(expense.getDescription())
                 .amount(expense.getAmount())
@@ -56,20 +60,36 @@ public class ExpenseController {
                 .build();
 
         expenseService.addExpense(expenseBuild);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build(); // 201 Created
     }
 
     @DeleteMapping("/{expenseId}")
     public ResponseEntity<Void> deleteExpense(@PathVariable("expenseId") Long expenseId) {
+        if (expenseId == null) {
+            return ResponseEntity.badRequest().build(); // 400 Bad Request
+        }
+
         expenseService.deleteExpense(expenseId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).build(); // 200 OK
     }
 
     @PutMapping("/{expenseId}")
-    public ResponseEntity<Void> updateExpense(@PathVariable("expenseId") Long expenseId, @RequestBody Expense expense) {
-        expense.setId(expenseId);
-        expenseService.updateExpense(expense);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
+    public ResponseEntity<Void> updateExpense(@PathVariable("expenseId") Long expenseId, @Valid @RequestBody Expense expense) {
+        if (expenseId == null || expense.getId() == null) {
+            return ResponseEntity.badRequest().build(); // 400 Bad Request if either ID is null
+        }
 
+        // Update the expense using the builder pattern
+        Expense updatedExpense = Expense.builder()
+                .id(expenseId) // Set the ID from the path
+                .category(expense.getCategory())
+                .description(expense.getDescription())
+                .amount(expense.getAmount())
+                .date(expense.getDate())
+                .userId(expense.getUserId())
+                .build();
+
+        expenseService.updateExpense(updatedExpense);
+        return ResponseEntity.status(HttpStatus.OK).build(); // 200 OK
+    }
 }

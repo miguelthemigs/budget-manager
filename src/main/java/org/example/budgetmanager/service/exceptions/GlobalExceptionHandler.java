@@ -1,4 +1,4 @@
-package org.example.budgetmanager.service.exeptions;
+package org.example.budgetmanager.service.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

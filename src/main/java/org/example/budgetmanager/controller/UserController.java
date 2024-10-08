@@ -1,15 +1,18 @@
 package org.example.budgetmanager.controller;
 
 import jakarta.validation.Valid;
-import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.User;
+import org.example.budgetmanager.repository.entity.UserEntity;
 import org.example.budgetmanager.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/user")
 public class UserController {
     private final UserServiceImpl userService;
@@ -21,52 +24,34 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
-        User user = userService.findById(id);
-        if (user != null) {
-            return ResponseEntity.ok(User.builder()
-                    .id(user.getId())
-                    .email(user.getEmail())
-                    .name(user.getName())
-                    .monthlyBudget(user.getMonthlyBudget())
-                    .preferredCurrency(user.getPreferredCurrency())
-                    .balance(user.getBalance())
-                    .categoryBudgets(user.getCategoryBudgets())
-                    .build());
-        } else {
-            return ResponseEntity.notFound().build();  // Return 404 if user is not found
-        }
+        Optional<User> user = userService.findById(id);
+        return user.map(ResponseEntity::ok) // Return the User object if present
+                .orElseGet(() -> ResponseEntity.notFound().build()); // Return 404 if user is not found
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user){
-        userService.addUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+        userService.addUser(user); // Save the User (service converts to UserEntity)
+        return ResponseEntity.status(HttpStatus.CREATED).body(user); // Return the created user
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok().build(); // Return 200 OK
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> editUser(@PathVariable("id") Long id, @RequestBody User user) {
-        user.setId(id);
-        userService.editUser(user);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<Void> editUser(@PathVariable("id") Long id, @RequestBody User user) {
+        user.setId(id); // Set the ID from the path variable
+        userService.editUser(user); // Pass User directly, service handles conversion
+        return ResponseEntity.ok().build(); // Return 200 OK
     }
 
-    @PatchMapping("/{id}/monthlyBudget")
-    // ex: http://localhost:8080/user/1/monthlyBudget?budget=1200 to set the monthly budget for user with id 1 to 1200
-    public ResponseEntity<User> defineMonthlyBudget(@PathVariable("id") Long id, @RequestParam("budget") double budget) {
+    // ex: http://localhost:8080/user/10/monthlyBudget?budget=1000
+    @PatchMapping("/{id}/monthlyBudget=1000")
+    public ResponseEntity<Void> defineMonthlyBudget(@PathVariable("id") Long id, @RequestParam("budget") double budget) {
         userService.defineMonthlyBudget(id, budget);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @PatchMapping("/{id}/categoryBudget")
-    // ex: http://localhost:8080/user/1/categoryBudget?budget=125&category=RESTAURANTS to set the budget for category FOOD for user with id 1 to 1200
-    public ResponseEntity<User> setCategoryBudget(@PathVariable("id") Long id, @RequestParam("budget") double budget, @RequestParam("category") String category) {
-        userService.setCategoryBudget(id, budget, Category.valueOf(category));
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok().build(); // Return 200 OK
     }
 }
