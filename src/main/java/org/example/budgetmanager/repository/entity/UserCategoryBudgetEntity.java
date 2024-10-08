@@ -1,10 +1,7 @@
 package org.example.budgetmanager.repository.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.User;
 
@@ -14,19 +11,17 @@ import org.example.budgetmanager.model.User;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserCategoryBudgetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_entity_id", nullable = false)
-    private UserEntity user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;  // Replacing the 'User' entity with just 'userId'
 
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    private Double budgetAmount;
-
+    private Double budget_amount;
 }
-
