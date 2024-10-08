@@ -3,7 +3,6 @@ package org.example.budgetmanager.repository.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.budgetmanager.model.Category;
-import org.example.budgetmanager.model.User;
 
 @Entity
 @Table(name = "user_category_budgets")
