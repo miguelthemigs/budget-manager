@@ -1,5 +1,6 @@
 package org.example.budgetmanager.controller;
 
+import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.UserCategoryBudget;
 import org.example.budgetmanager.service.impl.UserCategoryBudgetServiceImpl;
 import org.springframework.http.ResponseEntity;

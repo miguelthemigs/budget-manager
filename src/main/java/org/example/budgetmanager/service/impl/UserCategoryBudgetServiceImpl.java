@@ -1,10 +1,12 @@
 package org.example.budgetmanager.service.impl;
+import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.UserCategoryBudget;
 import org.example.budgetmanager.repository.UserCategoryBudgetRepository;
 import org.example.budgetmanager.repository.entity.UserCategoryBudgetEntity;
 import org.example.budgetmanager.service.UserCategoryBudgetService;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
