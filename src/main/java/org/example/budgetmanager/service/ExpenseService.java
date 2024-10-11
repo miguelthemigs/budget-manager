@@ -1,7 +1,6 @@
 package org.example.budgetmanager.service;
 import java.util.List;
 import java.util.Optional;
-
 import org.example.budgetmanager.model.Expense;
 
 public interface ExpenseService {

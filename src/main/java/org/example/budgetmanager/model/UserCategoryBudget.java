@@ -1,10 +1,8 @@
 package org.example.budgetmanager.model;
-
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.example.budgetmanager.repository.entity.UserEntity;
+
 
 @Data
 @Builder
