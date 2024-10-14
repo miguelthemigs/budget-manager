@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"  # External port 5433 mapped to internal port 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - docker_network_budgetapp
+
+  app:
+    image: docker_budgetapp_staging:latest
+    container_name: docker_budgetapp_container
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres  # Use internal port 5432
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8090:8080"  # Expose the app on port 8080
+    networks:
+      - docker_network_budgetapp
+
+volumes:
+  postgres_data:
+
+networks:
+  docker_network_budgetapp:
+    external: true  # Indicates that this network is already created and external to this Compose file
