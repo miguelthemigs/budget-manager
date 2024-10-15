@@ -1,5 +1,8 @@
 package org.example.budgetmanager.model;
 
+import jakarta.persistence.Table;
+
+
 public enum Category {
     GROCERIES,
     SHOPPING,
