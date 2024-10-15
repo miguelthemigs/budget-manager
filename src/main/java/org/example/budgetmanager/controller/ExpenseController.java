@@ -94,7 +94,7 @@ public class ExpenseController {
 
     @GetMapping("/monthly")
     // Ex: http://localhost:8090/expenses/monthly?userId=1&month=2024-10
-    public ResponseEntity<?> getExpensesForSelectedMonth(@RequestParam("userId") Long userId, @RequestParam("month") String month) {
+    public ResponseEntity<?> getExpensesTotalForSelectedMonth(@RequestParam("userId") Long userId, @RequestParam("month") String month) {
         if (userId == null || month == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -103,7 +103,7 @@ public class ExpenseController {
             return ResponseEntity.badRequest().body("Invalid month format. Please use yyyy-MM.");
         }
 
-        Optional<List<Expense>> expenses = expenseService.getAllExpensesForSelectedMonth(userId, month);
-        return ResponseEntity.ok(expenses.orElse(Collections.emptyList()));
+        Optional<Double> expenses = expenseService.getTotalValueOfExpensesForSelectedMonth(userId, month);
+        return ResponseEntity.ok(expenses.orElse(0.0)); // Return 0.0 if no expenses found
     }
 }

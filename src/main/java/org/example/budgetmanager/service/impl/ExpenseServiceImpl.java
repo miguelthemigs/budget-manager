@@ -68,18 +68,20 @@ public class ExpenseServiceImpl implements ExpenseService {
         expensesRepository.save(expenseEntity);
     }
 
-    public Optional<List<Expense>> getAllExpensesForSelectedMonth(Long userId, String month) {
+    public Optional<Double> getTotalValueOfExpensesForSelectedMonth(Long userId, String month) {
         YearMonth yearMonth = YearMonth.parse(month);
-        LocalDate startDate = yearMonth.atDay(1);
-        LocalDate endDate = yearMonth.atEndOfMonth();
+        LocalDate startDate = yearMonth.atDay(1); // Get the first day of the month
+        LocalDate endDate = yearMonth.atEndOfMonth(); // Get the last day of the month
 
-        // Retrieve expenses for the user within the date range and map them to the Expense model
-        return Optional.of(
-                expensesRepository.findByUserIdAndDateBetween(userId, startDate, endDate).stream()
-                        .map(this::toModel)
-                        .collect(Collectors.toList())
-        );
+        // Retrieve expenses for the user within the date range and sum their amounts
+        double totalAmount = expensesRepository.findByUserIdAndDateBetween(userId, startDate, endDate)
+                .stream()
+                .mapToDouble(ExpensesEntity::getAmount) // Assuming getAmount() returns the expense amount
+                .sum();
+
+        return Optional.of(totalAmount); // Wrap the total amount in an Optional
     }
+
 
     private ExpensesEntity toEntity(Expense expense) {
         return ExpensesEntity.builder()
