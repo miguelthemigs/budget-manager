@@ -9,6 +9,8 @@ import org.example.budgetmanager.repository.entity.UserEntity;
 import org.example.budgetmanager.service.ExpenseService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,6 +67,21 @@ public class ExpenseServiceImpl implements ExpenseService {
         ExpensesEntity expenseEntity = toEntity(expense);
         expensesRepository.save(expenseEntity);
     }
+
+    public Optional<Double> getTotalValueOfExpensesForSelectedMonth(Long userId, String month) {
+        YearMonth yearMonth = YearMonth.parse(month);
+        LocalDate startDate = yearMonth.atDay(1); // Get the first day of the month
+        LocalDate endDate = yearMonth.atEndOfMonth(); // Get the last day of the month
+
+        // Retrieve expenses for the user within the date range and sum their amounts
+        double totalAmount = expensesRepository.findByUserIdAndDateBetween(userId, startDate, endDate)
+                .stream()
+                .mapToDouble(ExpensesEntity::getAmount) // Assuming getAmount() returns the expense amount
+                .sum();
+
+        return Optional.of(totalAmount); // Wrap the total amount in an Optional
+    }
+
 
     private ExpensesEntity toEntity(Expense expense) {
         return ExpensesEntity.builder()
