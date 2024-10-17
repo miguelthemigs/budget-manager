@@ -50,7 +50,19 @@ jobs:
       - name: Run tests
         run: ./gradlew test --info  # Run your tests
 
-      # Add SonarQube analysis step
+  sonar:
+    runs-on: windows-latest
+    needs: test  # Ensure this job runs after the test job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
       - name: SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Your SonarQube token stored in GitHub secrets
