@@ -21,6 +21,13 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+
       - name: Build with Gradle
         run: ./gradlew build
 
@@ -41,4 +48,11 @@ jobs:
           distribution: 'corretto'
 
       - name: Run tests
-        run: ./gradlew test --info  # Use --info for more detailed output
+        run: ./gradlew test --info  # Run your tests
+
+      # Add SonarQube analysis step
+      - name: SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Your SonarQube token stored in GitHub secrets
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # Your SonarQube server URL stored in secrets
+        run: ./gradlew sonarqube --info  # Run SonarQube analysis after tests
