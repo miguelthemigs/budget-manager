@@ -1,9 +1,6 @@
 package org.example.budgetmanager.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
+
 import org.example.budgetmanager.model.Currency;
 import org.example.budgetmanager.model.Expense;
 import org.example.budgetmanager.model.Role;
@@ -162,4 +159,38 @@ class ExpenseServiceImplTest {
         verify(userRepository, times(1)).findById(1L);
         verify(expensesRepository, never()).findByUserId(anyLong());
     }
+
+    @Test
+    void getTotalValueOfExpensesForSelectedMonthSuccess() {
+        Long userId = 1L;
+        String month = "2021-10";
+
+        when(expensesRepository.findByUserIdAndDateBetween(eq(userId), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(List.of(expensesEntity));
+
+        Optional<Double> totalValue = expenseService.getTotalValueOfExpensesForSelectedMonth(userId, month);
+
+        assertTrue(totalValue.isPresent());
+        assertEquals(100.0, totalValue.get());
+        verify(expensesRepository, times(1)).findByUserIdAndDateBetween(eq(userId), any(LocalDate.class), any(LocalDate.class));
+    }
+
+    @Test
+    void getTotalValueOfExpensesForSelectedMonthNoExpenses() {
+        Long userId = 1L;
+        String month = "2021-10"; // October 2021
+
+        // Mock the repository to return an empty list
+        when(expensesRepository.findByUserIdAndDateBetween(eq(userId), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(List.of());
+
+        Optional<Double> totalValue = expenseService.getTotalValueOfExpensesForSelectedMonth(userId, month);
+
+        assertTrue(totalValue.isPresent());
+        assertEquals(0.0, totalValue.get());
+        verify(expensesRepository, times(1)).findByUserIdAndDateBetween(eq(userId), any(LocalDate.class), any(LocalDate.class));
+    }
+
+
+
 }
