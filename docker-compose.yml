@@ -15,7 +15,7 @@ services:
       - docker_network_budgetapp
 
   app:
-    image: budgetmanager_backend
+    image: budgetmanager_backend:latest
     container_name: docker_budgetapp_container
     depends_on:
       - db

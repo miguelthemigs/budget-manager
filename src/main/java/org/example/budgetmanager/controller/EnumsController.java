@@ -24,11 +24,14 @@ public class EnumsController {
 
     @GetMapping("/allCategories")
     public ResponseEntity<List<String>> getAllCategories() {
-//        List<String> categories = Arrays.stream(Category.values())
-//                .map(Enum::name) // Convert enum to its string representation (name)
-//                .collect(Collectors.toList());
-
         return ResponseEntity.ok(enumsService.getAllCategories().stream()
+                .map(Enum::name)
+                .collect(Collectors.toList()));
+    }
+
+    @GetMapping("/allCurrencies")
+    public ResponseEntity<List<String>> getAllCurrencies() {
+        return ResponseEntity.ok(enumsService.getAllCurrencies().stream()
                 .map(Enum::name)
                 .collect(Collectors.toList()));
     }
