@@ -53,4 +53,10 @@ public class UserController {
         userService.defineMonthlyBudget(id, budget);
         return ResponseEntity.ok().build(); // Return 200 OK
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updateUserFields(@PathVariable("id") Long id, @RequestBody User user) {
+        userService.partialUpdateUser(id, user);
+        return ResponseEntity.ok().build(); // Return 200 OK
+    }
 }

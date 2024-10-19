@@ -3,6 +3,7 @@ package org.example.budgetmanager.controller;
 import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.UserCategoryBudget;
 import org.example.budgetmanager.service.impl.UserCategoryBudgetServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ public class UserCategoryBudgetController {
 
     private final UserCategoryBudgetServiceImpl userCategoryBudgetService;
 
+    @Autowired
     public UserCategoryBudgetController(UserCategoryBudgetServiceImpl userCategoryBudgetService) {
         this.userCategoryBudgetService = userCategoryBudgetService;
     }

@@ -73,4 +73,31 @@ public class UserServiceImpl implements UserService {
         userEntity.setMonthlyBudget(budget);
         userRepository.save(userEntity);
     }
+
+    public void partialUpdateUser(Long id, User user) {
+        Optional<User> existingUserOptional = userRepository.findById(id).map(this::toModel);
+        if (existingUserOptional.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+
+        User existingUser = existingUserOptional.get();
+
+        // Update fields only if they are present in the request
+        if (user.getName() != null) {
+            existingUser.setName(user.getName());
+        }
+        if (user.getPreferredCurrency() != null) {
+            existingUser.setPreferredCurrency(user.getPreferredCurrency());
+        }
+        if (user.getMonthlyBudget() != 0) { // Assuming 0 is not a valid budget
+            existingUser.setMonthlyBudget(user.getMonthlyBudget());
+        }
+        if (user.getEmail() != null) {
+            existingUser.setEmail(user.getEmail());
+        }
+        user.setPassword(user.getPassword());
+        editUser(existingUser);
+
+        userRepository.save(toEntity(existingUser)); // Save the updated user
+    }
 }
