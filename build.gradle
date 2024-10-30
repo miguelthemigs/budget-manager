@@ -36,6 +36,7 @@ sonar {
     properties {
         property "sonar.projectKey", "budget-manager"
         property "sonar.projectName", "budget-manager"
+        property "sonar.token", "sqp_515c32390ccce069bec9226f2c4b385b5e06fc9e"
     }
 }
 
