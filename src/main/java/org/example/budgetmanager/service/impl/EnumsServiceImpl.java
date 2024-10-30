@@ -1,4 +1,4 @@
-package org.example.budgetmanager.service;
+package org.example.budgetmanager.service.impl;
 
 import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.Currency;
