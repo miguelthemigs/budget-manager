@@ -23,6 +23,7 @@ public class UserCategoryBudgetServiceImpl implements UserCategoryBudgetService 
     // Add new category budget for a user
     public void addUserCategoryBudget(UserCategoryBudget userCategoryBudget) {
         UserCategoryBudgetEntity budgetEntity = toEntity(userCategoryBudget);
+
         userCategoryBudgetRepository.save(budgetEntity);  // Persist the category budget entity
     }
 

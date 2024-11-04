@@ -47,8 +47,9 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
-      - name: Run tests
-        run: ./gradlew test --info  # Run your tests
+      - name: Run tests and generate JaCoCo report
+        run: |
+          ./gradlew test jacocoTestReport
 
   sonar:
     runs-on: windows-latest
@@ -63,8 +64,11 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
-      - name: SonarQube Analysis
+      - name: Upload JaCoCo report to SonarQube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Your SonarQube token stored in GitHub secrets
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # Your SonarQube server URL stored in secrets
-        run: ./gradlew sonarqube --info  # Run SonarQube analysis after tests
+        run: |
+          ./gradlew sonarqube -Dsonar.projectKey=budget-manager \
+                              -Dsonar.host.url=$SONAR_HOST_URL \
+                              -Dsonar.login=$SONAR_TOKEN
