@@ -1,5 +1,4 @@
 package org.example.budgetmanager.service.impl;
-import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.UserCategoryBudget;
 import org.example.budgetmanager.repository.UserCategoryBudgetRepository;
 import org.example.budgetmanager.repository.entity.UserCategoryBudgetEntity;

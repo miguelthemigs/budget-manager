@@ -37,12 +37,22 @@ sonar {
     properties {
         property "sonar.projectKey", "budget-manager"
         property "sonar.projectName", "budget-manager"
-        property "sonar.token", "sqp_515c32390ccce069bec9226f2c4b385b5e06fc9e"
+        property "sonar.token", "sqa_62aae6dd8edab5e8962b9aee4e4f604d2861d4b8"
         property "sonar.host.url", System.getenv("SONAR_HOST_URL")
-        property "sonar.jacoco.reportPaths", "$build/jacoco/test.exec"
+        //property "sonar.jacoco.reportPaths", "$build/jacoco/test.exec"
+        property "sonar.coverage.jacoco.xmlReportPaths", "/build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
 
+
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+tasks.jacocoTestReport {
+    reports {
+        xml.required = true // Enables XML report
+        csv.required = false
+        html.required = true
+    }
 }

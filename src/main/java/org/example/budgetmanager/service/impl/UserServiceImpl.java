@@ -7,7 +7,6 @@ import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.repository.UserRepository;
 import org.example.budgetmanager.repository.entity.UserEntity;
 import org.example.budgetmanager.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
