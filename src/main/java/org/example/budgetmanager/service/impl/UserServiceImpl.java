@@ -99,4 +99,8 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(toEntity(existingUser)); // Save the updated user
     }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email).map(this::toModel);
+    }
 }

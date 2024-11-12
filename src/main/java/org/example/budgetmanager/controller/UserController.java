@@ -2,6 +2,7 @@ package org.example.budgetmanager.controller;
 
 import jakarta.validation.Valid;
 import org.example.budgetmanager.model.User;
+import org.example.budgetmanager.service.UserService;
 import org.example.budgetmanager.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,10 +15,10 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/user")
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UserServiceImpl userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 

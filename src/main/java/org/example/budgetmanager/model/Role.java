@@ -1,5 +1,7 @@
 package org.example.budgetmanager.model;
 
-public enum Role {
+import java.util.Collection;
+
+public enum Role  {
     USER, ADMIN
 }

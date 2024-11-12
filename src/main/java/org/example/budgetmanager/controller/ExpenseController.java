@@ -2,6 +2,7 @@ package org.example.budgetmanager.controller;
 
 import jakarta.validation.Valid;
 import org.example.budgetmanager.model.Expense;
+import org.example.budgetmanager.service.ExpenseService;
 import org.example.budgetmanager.service.impl.ExpenseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,10 @@ import java.util.Optional;
 @RequestMapping("/expenses")
 public class ExpenseController {
 
-    private final ExpenseServiceImpl expenseService;
+    private final ExpenseService expenseService;
 
     @Autowired
-    public ExpenseController(ExpenseServiceImpl expenseService) {
+    public ExpenseController(ExpenseService expenseService) {
         this.expenseService = expenseService;
     }
 

@@ -9,4 +9,5 @@ public interface ExpenseService {
     Expense getExpenseById(Long expenseId);
     void deleteExpense(Long expenseId);
     void updateExpense(Expense expense);
+    Optional<Double> getTotalValueOfExpensesForSelectedMonth(Long userId, String month);
 }

@@ -9,5 +9,5 @@ public interface UserService {
     void deleteUser(Long id);
     void editUser(User user);
     void defineMonthlyBudget(Long id, double budget);
-
+    void partialUpdateUser(Long id, User user);
 }

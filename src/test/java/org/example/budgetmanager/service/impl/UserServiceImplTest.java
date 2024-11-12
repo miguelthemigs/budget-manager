@@ -123,4 +123,26 @@ class UserServiceImplTest {
         });
         assertEquals("User not found", exception.getMessage());
     }
+
+    @Test
+    void findByEmail_existingEmail_returnsUser() {
+        when(userRepository.findByEmail("john@example.com")).thenReturn(Optional.of(userEntity));
+
+        Optional<User> foundUser = userService.findByEmail("john@example.com");
+
+        assertTrue(foundUser.isPresent());
+        assertEquals(Optional.of(user), foundUser);
+        verify(userRepository, times(1)).findByEmail("john@example.com");
+    }
+
+    @Test
+    void findByEmail_nonExistingEmail_returnsEmptyOptional() {
+        when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
+
+        Optional<User> foundUser = userService.findByEmail("nonexistent@example.com");
+
+        assertFalse(foundUser.isPresent());
+        verify(userRepository, times(1)).findByEmail("nonexistent@example.com");
+    }
+
 }
