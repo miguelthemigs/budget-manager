@@ -3,6 +3,7 @@ package org.example.budgetmanager.service.impl;
 import lombok.AllArgsConstructor;
 import org.example.budgetmanager.model.Role;
 import org.example.budgetmanager.model.User;
+import org.example.budgetmanager.repository.DTO.UserLoginDTO;
 import org.example.budgetmanager.repository.DTO.UserRegistrationDTO;
 import org.example.budgetmanager.security.token.AccessTokenEncoder;
 import org.example.budgetmanager.security.token.impl.AccessTokenImpl;
@@ -35,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
         // TO-DO: after register, ask user to fill monthly budget and preferred currency
     }
 
-    public String loginUser(UserRegistrationDTO user) {
+    public String loginUser(UserLoginDTO user) {
         User userEntity = userService.findByEmail(user.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found!"));
 
