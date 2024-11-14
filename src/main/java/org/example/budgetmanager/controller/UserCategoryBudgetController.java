@@ -24,7 +24,11 @@ public class UserCategoryBudgetController {
 
     @PostMapping("")
     public ResponseEntity<UserCategoryBudget> addUserCategoryBudget(@RequestBody UserCategoryBudget userCategoryBudget) {
-        userCategoryBudgetService.addUserCategoryBudget(userCategoryBudget);
+        try{
+            userCategoryBudgetService.addUserCategoryBudget(userCategoryBudget);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build(); // Bad request if category already exists
+        }
         return ResponseEntity.status(201).body(userCategoryBudget); // Created status
     }
 

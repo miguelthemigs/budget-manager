@@ -53,18 +53,6 @@ public class AuthenticationRequestFilter extends OncePerRequestFilter {
         response.flushBuffer();
     }
 
-//    private void setupSpringSecurityContext(AccessToken accessToken) {
-//        UserDetails userDetails = new User(accessToken.getSubject(), "",
-//                accessToken.getRoles()
-//                        .stream()
-//                        .map(role -> new SimpleGrantedAuthority(SPRING_SECURITY_ROLE_PREFIX + role))
-//                        .toList());
-//
-//        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-//                userDetails, null, userDetails.getAuthorities());
-//        usernamePasswordAuthenticationToken.setDetails(accessToken);
-//        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-//    }
 private void setupSpringSecurityContext(AccessToken accessToken) {
     // Map the single role from the enum to a SimpleGrantedAuthority
     SimpleGrantedAuthority authority = new SimpleGrantedAuthority(SPRING_SECURITY_ROLE_PREFIX + accessToken.getRole().name());

@@ -5,8 +5,10 @@ import org.example.budgetmanager.security.auth.AuthenticationRequestFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -36,7 +38,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login", "/register").permitAll() // Allow public access to login endpoint
-                        .anyRequest().authenticated() // All other endpoints require authentication
+                        //.anyRequest().authenticated() // All other endpoints require authentication
+                        .anyRequest().permitAll() // All other endpoints require authentication
 
 
                 )
@@ -48,6 +51,11 @@ public class WebSecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED); // Sends 401 Unauthorized status
     }
 
 
