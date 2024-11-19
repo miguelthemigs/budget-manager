@@ -19,11 +19,11 @@ public class UserCategoryBudgetServiceImpl implements UserCategoryBudgetService 
         this.userCategoryBudgetRepository = userCategoryBudgetRepository;
     }
 
-    // Add new category budget for a user
     public void addUserCategoryBudget(UserCategoryBudget userCategoryBudget) {
         UserCategoryBudgetEntity budgetEntity = toEntity(userCategoryBudget);
         Long userId = userCategoryBudget.getUser_id();
         List<UserCategoryBudget> allUserBudgets = getCategoryBudgetsForUser(userId).orElse(List.of());  // Get all category budgets for the user
+        System.out.println(allUserBudgets);
         if (allUserBudgets.stream().anyMatch(b -> b.getCategory().equals(userCategoryBudget.getCategory()))) {
             throw new IllegalArgumentException("Category budget for " + userCategoryBudget.getCategory() + " already exists");
         }

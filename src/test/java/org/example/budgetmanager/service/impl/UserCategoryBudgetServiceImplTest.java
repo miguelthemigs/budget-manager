@@ -52,9 +52,23 @@ class UserCategoryBudgetServiceImplTest {
     }
 
     @Test
-    void addUserCategoryBudget() {
+    void addUserCategoryBudget_HappyPath() {
+        when(userCategoryBudgetRepository.findByUserId(1L)).thenReturn(Collections.emptyList());
         userCategoryBudgetService.addUserCategoryBudget(userCategoryBudget);
         verify(userCategoryBudgetRepository, times(1)).save(any(UserCategoryBudgetEntity.class));
+    }
+
+    @Test
+    void addUserCategoryBudget_CategoryAlreadyExists() {
+        when(userCategoryBudgetRepository.findByUserId(1L)).thenReturn(Collections.singletonList(userCategoryBudgetEntity));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            userCategoryBudgetService.addUserCategoryBudget(userCategoryBudget);
+        });
+
+        assertEquals("Category budget for RESTAURANTS already exists", exception.getMessage());
+        
+        verify(userCategoryBudgetRepository, times(0)).save(any(UserCategoryBudgetEntity.class));
     }
 
     @Test

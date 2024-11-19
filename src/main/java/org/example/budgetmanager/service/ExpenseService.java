@@ -10,4 +10,5 @@ public interface ExpenseService {
     void deleteExpense(Long expenseId);
     void updateExpense(Expense expense);
     Optional<Double> getTotalValueOfExpensesForSelectedMonth(Long userId, String month);
+    List<Expense> getExpensesForUserAndMonth(Long userId, int month, int year);
 }

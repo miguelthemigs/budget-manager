@@ -10,4 +10,5 @@ public interface UserService {
     void editUser(User user);
     void defineMonthlyBudget(Long id, double budget);
     void partialUpdateUser(Long id, User user);
+    Optional<User> findByEmail(String email);
 }

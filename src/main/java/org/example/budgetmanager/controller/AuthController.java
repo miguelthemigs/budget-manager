@@ -4,11 +4,9 @@ import org.example.budgetmanager.repository.DTO.UserLoginDTO;
 import org.example.budgetmanager.repository.DTO.UserRegistrationDTO;
 import org.example.budgetmanager.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -23,7 +21,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(UserRegistrationDTO user){
+    public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO user){
         try {
             authService.registerUser(user);
             return ResponseEntity.ok("User registered successfully");
@@ -33,10 +31,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(UserLoginDTO user){
+    public ResponseEntity<String> loginUser(@RequestBody UserLoginDTO user){
         try {
             String token = authService.loginUser(user);
-            return ResponseEntity.ok("{\"accessToken\": \"" + token + "\"}");
+            return ResponseEntity.status(HttpStatus.CREATED).body(token);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

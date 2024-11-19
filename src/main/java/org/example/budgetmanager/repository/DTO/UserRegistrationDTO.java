@@ -1,14 +1,15 @@
 package org.example.budgetmanager.repository.DTO;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import lombok.*;
 
 @Data
 @Getter
 @Setter
+@AllArgsConstructor
 public class UserRegistrationDTO {
     private String name;
+    @Email
     private String email;
     private String password;
     private String repeatedPassword;

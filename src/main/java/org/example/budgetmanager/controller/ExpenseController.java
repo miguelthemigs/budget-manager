@@ -107,4 +107,15 @@ public class ExpenseController {
         Optional<Double> expenses = expenseService.getTotalValueOfExpensesForSelectedMonth(userId, month);
         return ResponseEntity.ok(expenses.orElse(0.0)); // Return 0.0 if no expenses found
     }
+
+    @GetMapping("/perMonth")
+    // Ex: http://localhost:8090/expenses/perMonth?userId=1&month=10&year=2024
+    public ResponseEntity<List<Expense>> getExpensesForUserAndMonth(@RequestParam("userId") Long userId, @RequestParam("month") int month, @RequestParam("year") int year) {
+        if (userId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<Expense> expenses = expenseService.getExpensesForUserAndMonth(userId, month, year);
+        return ResponseEntity.ok(expenses);
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -80,6 +81,18 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .sum();
 
         return Optional.of(totalAmount); // Wrap the total amount in an Optional
+    }
+
+    public List<Expense> getExpensesForUserAndMonth(Long userId, int month, int year) {
+        // Calculate start and end date for the given month and year
+        LocalDate startDate = LocalDate.of(year, month, 1); // First day of the month
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth()); // Last day of the month
+
+        // Fetch expenses from the repository for the given user and date range
+        return expensesRepository.findByUserIdAndDateBetween(userId, startDate, endDate)
+                .stream()
+                .map(this::toModel)
+                .collect(Collectors.toList());
     }
 
 
