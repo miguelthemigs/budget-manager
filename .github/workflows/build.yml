@@ -51,6 +51,12 @@ jobs:
         run: |
           ./gradlew test jacocoTestReport
 
+      - name: Upload JaCoCo report as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/jacocoTestReport.xml
+
   sonar:
     runs-on: windows-latest
     needs: test  # Ensure this job runs after the test job
@@ -64,8 +70,14 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
+      - name: Download JaCoCo report from previous job
+        uses: actions/download-artifact@v3
+        with:
+          name: jacoco-report
+
       - name: Upload JaCoCo report to SonarQube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Your SonarQube token stored in GitHub secrets
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # Your SonarQube server URL stored in secrets
-        run: ./gradlew sonar --info
+        run: |
+          ./gradlew sonar --info
