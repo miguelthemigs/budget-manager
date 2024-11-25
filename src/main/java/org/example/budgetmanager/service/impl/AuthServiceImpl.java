@@ -20,11 +20,11 @@ public class AuthServiceImpl implements AuthService {
     private AccessTokenEncoder jwtTokenProvider;
 
     public void registerUser(UserRegistrationDTO user) {
-        if (userService.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists!");
-        }
         if (!user.getPassword().equals(user.getRepeatedPassword())) {
             throw new RuntimeException("Passwords do not match!");
+        }
+        if (userService.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists!");
         }
 
         userService.addUser(User.builder()
@@ -33,7 +33,6 @@ public class AuthServiceImpl implements AuthService {
                 .password(passwordEncoder.encode(user.getPassword()))
                 .role(Role.USER)
                 .build());
-        // TO-DO: after register, ask user to fill monthly budget and preferred currency
     }
 
     public String loginUser(UserLoginDTO user) {

@@ -36,9 +36,9 @@ public class WebSecurityConfig {
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/login", "/register").permitAll() // Allow public access to login endpoint
-                        .anyRequest().authenticated() // All other endpoints require authentication
-                        //.anyRequest().permitAll() // All other endpoints require authentication
+                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll() // Allow public access to login endpoint
+                        //.anyRequest().authenticated() // All other endpoints require authentication
+                        .anyRequest().permitAll()
 
 
                 )

@@ -1,5 +1,6 @@
 package org.example.budgetmanager.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.service.UserService;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -55,9 +57,10 @@ public class UserController {
         return ResponseEntity.ok().build(); // Return 200 OK
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateUserFields(@PathVariable("id") Long id, @RequestBody User user) {
-        userService.partialUpdateUser(id, user);
-        return ResponseEntity.ok().build(); // Return 200 OK
+    @RolesAllowed({"ADMIN"})
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.findAll());
     }
+
 }
