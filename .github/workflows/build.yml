@@ -84,7 +84,7 @@ jobs:
         run: |
           ./gradlew sonar --info
   docker:
-    runs-on: ubuntu-latest  # Use Windows-based runner
+    runs-on: ubuntu-latest  # Use Ubuntu-based runner
     needs: build
     steps:
       - name: Checkout code
@@ -92,7 +92,6 @@ jobs:
 
       - name: Set up Docker
         run: |
-          Start-Service docker  # Ensure Docker service is running
           docker version        # Check Docker installation
 
       - name: Log in to Docker Hub
@@ -101,8 +100,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t miguelwroale/budgetmanager_backend:latest .
+          docker build -t miguelwroale/budgetmanager_backend:latest .  # Build the Docker image
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push miguelwroale/budgetmanager_backend:latest
+          docker push miguelwroale/budgetmanager_backend:latest  # Push the image to Docker Hub
