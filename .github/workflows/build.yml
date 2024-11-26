@@ -100,7 +100,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t miguelwroale/budgetmanager_backend:latest .  # Build the Docker image
+          docker build -t budgetmanager_backend:latest .  # Build the Docker image
 
       - name: Push Docker image to Docker Hub
         run: |
