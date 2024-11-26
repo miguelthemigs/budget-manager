@@ -60,7 +60,7 @@ jobs:
           path: build/reports/jacoco/test/jacocoTestReport.xml
 
   sonar:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: test  # Ensure this job runs after the test job
     steps:
       - name: Checkout code
@@ -84,7 +84,7 @@ jobs:
         run: |
           ./gradlew sonar --info
   docker:
-    runs-on: windows-latest  # Use Windows-based runner
+    runs-on: ubuntu-latest  # Use Windows-based runner
     needs: build
     steps:
       - name: Checkout code
