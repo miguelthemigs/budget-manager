@@ -3,7 +3,6 @@ package org.example.budgetmanager.controller;
 import jakarta.validation.Valid;
 import org.example.budgetmanager.model.Expense;
 import org.example.budgetmanager.service.ExpenseService;
-import org.example.budgetmanager.service.impl.ExpenseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
