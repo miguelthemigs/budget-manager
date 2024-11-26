@@ -37,6 +37,8 @@ jobs:
   test:
     runs-on: windows-latest
     needs: build  # Ensure this job runs after the build job
+    env:
+      SPRING_PROFILES_ACTIVE: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
