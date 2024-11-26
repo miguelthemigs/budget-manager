@@ -102,9 +102,6 @@ jobs:
       - name: Ensure gradlew is executable
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
-
       - name: Build Docker image
         run: |
           docker build -t budgetmanager_backend:latest .
