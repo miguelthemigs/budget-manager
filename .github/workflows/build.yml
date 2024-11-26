@@ -85,30 +85,30 @@ jobs:
           ./gradlew sonar --info
 
   docker:
-    runs-on: ubuntu-latest  # Use Ubuntu-based runner for Docker job
-    needs: build
+    runs-on: ubuntu-latest  # Use Ubuntu-based runner
+    needs: build  # Ensure this job runs after the build job
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Docker
         run: |
-          docker version  # Check Docker installation
+          docker version        # Check Docker installation
 
       - name: Log in to Docker Hub
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Ensure gradlew is executable
-        run: chmod +x gradlew  # Ensure gradlew script is executable
+        run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build  # Build project using Gradle (should be using JDK 17 here)
+        run: ./gradlew build
 
       - name: Build Docker image
         run: |
-          docker build -t budgetmanager_backend:latest .  # Build Docker image
+          docker build -t budgetmanager_backend:latest .
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push miguelwroale/budgetmanager_backend:latest  # Push the image to Docker Hub
+          docker push miguelwroale/budgetmanager_backend:latest
