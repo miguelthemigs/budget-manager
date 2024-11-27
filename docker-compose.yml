@@ -15,6 +15,11 @@ services:
       - docker_network_budgetapp
 
   app:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Ensure you have a Dockerfile in the root directory
+      args:
+        GRADLE_TASK: clean build  # Pass Gradle task as build argument
     image: budgetmanager_backend:latest
     container_name: docker_budgetapp_container
     depends_on:
@@ -33,4 +38,4 @@ volumes:
 
 networks:
   docker_network_budgetapp:
-    external: true  # Indicates that this network is already created and external to this Compose file
+    external: true

@@ -1,6 +1,7 @@
 package org.example.budgetmanager.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.Expense;
 import org.example.budgetmanager.repository.ExpensesRepository;
 import org.example.budgetmanager.repository.UserRepository;
@@ -93,6 +94,16 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .stream()
                 .map(this::toModel)
                 .collect(Collectors.toList());
+    }
+
+    public double getTotalSpentForCategoryBudget(Long userId, String category, YearMonth yearMonth) {
+        LocalDate startDate = yearMonth.atDay(1);
+        LocalDate endDate = yearMonth.atEndOfMonth();
+
+        return expensesRepository.findByUserIdAndCategoryAndDateBetween(userId, Category.valueOf(category), startDate, endDate)
+                .stream()
+                .mapToDouble(ExpensesEntity::getAmount)
+                .sum();
     }
 
 

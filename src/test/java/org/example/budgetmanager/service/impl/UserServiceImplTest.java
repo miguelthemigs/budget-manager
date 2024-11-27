@@ -12,12 +12,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 class UserServiceImplTest {
 
     @Mock
@@ -144,5 +147,16 @@ class UserServiceImplTest {
         assertFalse(foundUser.isPresent());
         verify(userRepository, times(1)).findByEmail("nonexistent@example.com");
     }
+
+    @Test
+    void findAll() {
+        when(userRepository.findAll()).thenReturn(List.of(userEntity));
+        assertEquals(List.of(user), userService.findAll());
+    }
+
+
+
+
+
 
 }

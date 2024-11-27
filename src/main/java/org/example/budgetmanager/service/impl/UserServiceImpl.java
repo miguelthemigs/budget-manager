@@ -9,7 +9,9 @@ import org.example.budgetmanager.repository.entity.UserEntity;
 import org.example.budgetmanager.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -73,34 +75,12 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userEntity);
     }
 
-    public void partialUpdateUser(Long id, User user) {
-        Optional<User> existingUserOptional = userRepository.findById(id).map(this::toModel);
-        if (existingUserOptional.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
-        }
-
-        User existingUser = existingUserOptional.get();
-
-        // Update fields only if they are present in the request
-        if (user.getName() != null) {
-            existingUser.setName(user.getName());
-        }
-        if (user.getPreferredCurrency() != null) {
-            existingUser.setPreferredCurrency(user.getPreferredCurrency());
-        }
-        if (user.getMonthlyBudget() != 0) { // Assuming 0 is not a valid budget
-            existingUser.setMonthlyBudget(user.getMonthlyBudget());
-        }
-        if (user.getEmail() != null) {
-            existingUser.setEmail(user.getEmail());
-        }
-        user.setPassword(user.getPassword());
-        editUser(existingUser);
-
-        userRepository.save(toEntity(existingUser)); // Save the updated user
-    }
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email).map(this::toModel);
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll().stream().map(this::toModel).collect(Collectors.toList());
     }
 }

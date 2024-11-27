@@ -19,8 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 @EnableWebSecurity
 @EnableMethodSecurity(jsr250Enabled = true)
 @Configuration
@@ -36,10 +35,10 @@ public class WebSecurityConfig {
                 .sessionManagement(configurer ->
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(registry -> registry
-                        //.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                       // .requestMatchers(HttpMethod.POST, "/login", "/register").permitAll() // Allow public access to login endpoint
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll() // Allow public access to login endpoint
                         //.anyRequest().authenticated() // All other endpoints require authentication
-                        .anyRequest().permitAll() // All other endpoints require authentication
+                        .anyRequest().permitAll()
 
 
                 )
