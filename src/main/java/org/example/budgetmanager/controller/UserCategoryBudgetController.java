@@ -1,6 +1,8 @@
 package org.example.budgetmanager.controller;
 
+import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.UserCategoryBudget;
+import org.example.budgetmanager.service.UserCategoryBudgetService;
 import org.example.budgetmanager.service.impl.UserCategoryBudgetServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,7 @@ import java.util.Optional;
 @RequestMapping("/category-budgets")
 public class UserCategoryBudgetController {
 
-    private final UserCategoryBudgetServiceImpl userCategoryBudgetService;
+    private final UserCategoryBudgetService userCategoryBudgetService;
 
     @Autowired
     public UserCategoryBudgetController(UserCategoryBudgetServiceImpl userCategoryBudgetService) {
@@ -71,4 +73,5 @@ public class UserCategoryBudgetController {
             return ResponseEntity.notFound().build(); // Not found if ID is invalid
         }
     }
+
 }

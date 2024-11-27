@@ -1,4 +1,5 @@
 package org.example.budgetmanager.service.impl;
+import org.example.budgetmanager.model.Category;
 import org.example.budgetmanager.model.UserCategoryBudget;
 import org.example.budgetmanager.repository.UserCategoryBudgetRepository;
 import org.example.budgetmanager.repository.entity.UserCategoryBudgetEntity;
@@ -74,6 +75,8 @@ public class UserCategoryBudgetServiceImpl implements UserCategoryBudgetService 
         userCategoryBudgetRepository.deleteById(budgetId);
     }
 
+
+
     // Helper method to map model to entity
     private UserCategoryBudgetEntity toEntity(UserCategoryBudget budget) {
         return UserCategoryBudgetEntity.builder()
@@ -93,4 +96,6 @@ public class UserCategoryBudgetServiceImpl implements UserCategoryBudgetService 
                 .budget_amount(entity.getBudget_amount())
                 .build();
     }
+
+
 }

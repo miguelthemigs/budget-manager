@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.YearMonth;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -116,5 +117,32 @@ public class ExpenseController {
 
         List<Expense> expenses = expenseService.getExpensesForUserAndMonth(userId, month, year);
         return ResponseEntity.ok(expenses);
+    }
+
+    @GetMapping("/categoryBudget")
+    // ex: http://localhost:8090/expenses/categoryBudget?userId=1&category=SUBSCRIPTIONS&year=2024&month=11
+    public ResponseEntity<Double> getTotalSpentForCategoryBudget(
+            @RequestParam("userId") Long userId,
+            @RequestParam("category") String category,
+            @RequestParam("year") int year,
+            @RequestParam("month") int month) {
+        if (userId == null || category == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            // Construct the YearMonth object from year and month
+            YearMonth yearMonth = YearMonth.of(year, month);
+
+            // Call the service method
+            double totalSpent = expenseService.getTotalSpentForCategoryBudget(userId, category, yearMonth);
+            return ResponseEntity.ok(totalSpent);
+        } catch (IllegalArgumentException ex) {
+            // Handle invalid category or invalid YearMonth
+            return ResponseEntity.badRequest().body(-1.0); // Optional: Return a specific error value
+        } catch (Exception ex) {
+            // Handle unexpected errors
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
