@@ -59,7 +59,7 @@ Key features include role-based access control, insightful visualizations powere
 - npm installed on your machine
 - Java JDK 17
 Back-End repository for Budget Manager Project
-You can find the Front-End here: https://github.com/miguelthemigs/budget-manager-front
+- You can find the Front-End here: https://github.com/miguelthemigs/budget-manager-front
 
 ### Steps  
 1. **Clone the Repository**:  
