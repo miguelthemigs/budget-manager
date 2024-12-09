@@ -108,4 +108,4 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push miguelwroale/budgetmanager_backend:latest
+          docker push budgetmanager_backend:latest
