@@ -7,6 +7,7 @@ import org.example.budgetmanager.model.Role;
 import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.repository.UserRepository;
 import org.example.budgetmanager.repository.entity.UserEntity;
+import org.example.budgetmanager.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -25,6 +26,9 @@ class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private AuthService authService;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -80,15 +84,23 @@ class UserServiceImplTest {
 
     @Test
     void deleteUser() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
+        doNothing().when(authService).checkIfUserIsOwnerOrAdmin(userEntity.getId());
         userService.deleteUser(1L);
+        verify(authService, times(1)).checkIfUserIsOwnerOrAdmin(userEntity.getId());
         verify(userRepository, times(1)).deleteById(1L);
     }
 
     @Test
     public void testEditUserSuccess() {
         user.setId(1L);
+
+        // Mock the behavior of authService to avoid the actual authorization check
+        doNothing().when(authService).checkIfUserIsOwnerOrAdmin(user.getId());
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
         userService.editUser(user);
-        verify(userRepository).save(any(UserEntity.class));
+        verify(authService, times(1)).checkIfUserIsOwnerOrAdmin(userEntity.getId());
+        verify(userRepository).save(any(UserEntity.class)); // Verify that save was called
     }
 
     @Test
