@@ -61,28 +61,43 @@ jobs:
 
   cypress:
     runs-on: ubuntu-latest
-    needs: test  # Ensure this job runs after the test job
+    needs: test  # Ensure Cypress runs after the backend tests
     steps:
-      - name: Checkout code
+      - name: Checkout backend code
         uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Start backend container
+        run: docker-compose up -d
+
+      - name: Wait for backend to be ready
+        run: npx wait-on http://localhost:8090
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install Cypress
+        run: npm install cypress --save-dev
+        working-directory: ./cypress-tests  # Adjust if Cypress is in a subfolder
 
       - name: Run Cypress tests
-        run: npm run cy:run  # Adjust this to match your Cypress test command
+        run: npx cypress run
+        working-directory: ./cypress-tests  # Adjust if Cypress is in a subfolder
 
-      - name: Upload Cypress artifacts
-        if: failure()  # Upload only if Cypress tests fail
+      - name: Upload Cypress results
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: cypress-artifacts
-          path: cypress/videos/  # Adjust paths if needed
+          path: ./cypress-tests/cypress/videos/  # Adjust if needed
+
   sonar:
     runs-on: windows-latest
     needs: test  # Ensure this job runs after the test job
