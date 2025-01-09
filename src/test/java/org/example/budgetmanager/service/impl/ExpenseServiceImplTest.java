@@ -165,32 +165,41 @@ class ExpenseServiceImplTest {
     void getTotalValueOfExpensesForSelectedMonthSuccess() {
         Long userId = 1L;
         String month = "2021-10";
+        YearMonth yearMonth = YearMonth.parse(month);
+        LocalDate startDate = yearMonth.atDay(1);  // First day of the month
+        LocalDate endDate = yearMonth.atEndOfMonth(); // Last day of the month
 
-        when(expensesRepository.findByUserIdAndDateBetween(eq(userId), any(LocalDate.class), any(LocalDate.class)))
-                .thenReturn(List.of(expensesEntity));
+        // Mock the repository to return a specific total amount
+        when(expensesRepository.getTotalValueOfExpensesForSelectedMonth(eq(userId), eq(startDate), eq(endDate)))
+                .thenReturn(Optional.of(100.0));
 
         Optional<Double> totalValue = expenseService.getTotalValueOfExpensesForSelectedMonth(userId, month);
 
         assertTrue(totalValue.isPresent());
         assertEquals(100.0, totalValue.get());
-        verify(expensesRepository, times(1)).findByUserIdAndDateBetween(eq(userId), any(LocalDate.class), any(LocalDate.class));
+        verify(expensesRepository, times(1)).getTotalValueOfExpensesForSelectedMonth(eq(userId), eq(startDate), eq(endDate));
     }
+
 
     @Test
     void getTotalValueOfExpensesForSelectedMonthNoExpenses() {
         Long userId = 1L;
         String month = "2021-10"; // October 2021
+        YearMonth yearMonth = YearMonth.parse(month);
+        LocalDate startDate = yearMonth.atDay(1);  // First day of the month
+        LocalDate endDate = yearMonth.atEndOfMonth(); // Last day of the month
 
-        // Mock the repository to return an empty list
-        when(expensesRepository.findByUserIdAndDateBetween(eq(userId), any(LocalDate.class), any(LocalDate.class)))
-                .thenReturn(List.of());
+        // Mock the repository to return Optional.empty() for no expenses
+        when(expensesRepository.getTotalValueOfExpensesForSelectedMonth(eq(userId), eq(startDate), eq(endDate)))
+                .thenReturn(Optional.empty());
 
         Optional<Double> totalValue = expenseService.getTotalValueOfExpensesForSelectedMonth(userId, month);
 
         assertTrue(totalValue.isPresent());
         assertEquals(0.0, totalValue.get());
-        verify(expensesRepository, times(1)).findByUserIdAndDateBetween(eq(userId), any(LocalDate.class), any(LocalDate.class));
+        verify(expensesRepository, times(1)).getTotalValueOfExpensesForSelectedMonth(eq(userId), eq(startDate), eq(endDate));
     }
+
 
     @Test
     void testGetExpensesForUserAndMonth_Success() {
