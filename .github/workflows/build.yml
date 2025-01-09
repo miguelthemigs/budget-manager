@@ -54,7 +54,7 @@ jobs:
           ./gradlew test jacocoTestReport
 
       - name: Upload JaCoCo report as an artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
           path: build/reports/jacoco/test/jacocoTestReport.xml
@@ -73,7 +73,7 @@ jobs:
           distribution: 'corretto'
 
       - name: Download JaCoCo report from previous job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: jacoco-report
 

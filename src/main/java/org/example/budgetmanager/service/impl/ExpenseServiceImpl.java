@@ -75,14 +75,13 @@ public class ExpenseServiceImpl implements ExpenseService {
         LocalDate startDate = yearMonth.atDay(1); // Get the first day of the month
         LocalDate endDate = yearMonth.atEndOfMonth(); // Get the last day of the month
 
-        // Retrieve expenses for the user within the date range and sum their amounts
-        double totalAmount = expensesRepository.findByUserIdAndDateBetween(userId, startDate, endDate)
-                .stream()
-                .mapToDouble(ExpensesEntity::getAmount) // Assuming getAmount() returns the expense amount
-                .sum();
+        // Retrieve the total from the repository
+        Optional<Double> totalAmount = expensesRepository.getTotalValueOfExpensesForSelectedMonth(userId, startDate, endDate);
 
-        return Optional.of(totalAmount); // Wrap the total amount in an Optional
+        // If no value is found, return 0.0
+        return totalAmount.isPresent() ? totalAmount : Optional.of(0.0);
     }
+
 
     public List<Expense> getExpensesForUserAndMonth(Long userId, int month, int year) {
         // Calculate start and end date for the given month and year

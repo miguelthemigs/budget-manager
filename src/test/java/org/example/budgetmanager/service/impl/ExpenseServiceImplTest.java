@@ -1,10 +1,7 @@
 package org.example.budgetmanager.service.impl;
 
 
-import org.example.budgetmanager.model.Currency;
-import org.example.budgetmanager.model.Expense;
-import org.example.budgetmanager.model.Role;
-import org.example.budgetmanager.model.User;
+import org.example.budgetmanager.model.*;
 import org.example.budgetmanager.repository.ExpensesRepository;
 import org.example.budgetmanager.repository.UserRepository;
 import org.example.budgetmanager.repository.entity.ExpensesEntity;
@@ -16,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.YearMonth;
 import java.util.List;
 
 import java.time.LocalDate;
@@ -167,32 +165,79 @@ class ExpenseServiceImplTest {
     void getTotalValueOfExpensesForSelectedMonthSuccess() {
         Long userId = 1L;
         String month = "2021-10";
+        YearMonth yearMonth = YearMonth.parse(month);
+        LocalDate startDate = yearMonth.atDay(1);  // First day of the month
+        LocalDate endDate = yearMonth.atEndOfMonth(); // Last day of the month
 
-        when(expensesRepository.findByUserIdAndDateBetween(eq(userId), any(LocalDate.class), any(LocalDate.class)))
-                .thenReturn(List.of(expensesEntity));
+        // Mock the repository to return a specific total amount
+        when(expensesRepository.getTotalValueOfExpensesForSelectedMonth(eq(userId), eq(startDate), eq(endDate)))
+                .thenReturn(Optional.of(100.0));
 
         Optional<Double> totalValue = expenseService.getTotalValueOfExpensesForSelectedMonth(userId, month);
 
         assertTrue(totalValue.isPresent());
         assertEquals(100.0, totalValue.get());
-        verify(expensesRepository, times(1)).findByUserIdAndDateBetween(eq(userId), any(LocalDate.class), any(LocalDate.class));
+        verify(expensesRepository, times(1)).getTotalValueOfExpensesForSelectedMonth(eq(userId), eq(startDate), eq(endDate));
     }
+
 
     @Test
     void getTotalValueOfExpensesForSelectedMonthNoExpenses() {
         Long userId = 1L;
         String month = "2021-10"; // October 2021
+        YearMonth yearMonth = YearMonth.parse(month);
+        LocalDate startDate = yearMonth.atDay(1);  // First day of the month
+        LocalDate endDate = yearMonth.atEndOfMonth(); // Last day of the month
 
-        // Mock the repository to return an empty list
-        when(expensesRepository.findByUserIdAndDateBetween(eq(userId), any(LocalDate.class), any(LocalDate.class)))
-                .thenReturn(List.of());
+        // Mock the repository to return Optional.empty() for no expenses
+        when(expensesRepository.getTotalValueOfExpensesForSelectedMonth(eq(userId), eq(startDate), eq(endDate)))
+                .thenReturn(Optional.empty());
 
         Optional<Double> totalValue = expenseService.getTotalValueOfExpensesForSelectedMonth(userId, month);
 
         assertTrue(totalValue.isPresent());
         assertEquals(0.0, totalValue.get());
-        verify(expensesRepository, times(1)).findByUserIdAndDateBetween(eq(userId), any(LocalDate.class), any(LocalDate.class));
+        verify(expensesRepository, times(1)).getTotalValueOfExpensesForSelectedMonth(eq(userId), eq(startDate), eq(endDate));
     }
+
+
+    @Test
+    void testGetExpensesForUserAndMonth_Success() {
+        Long userId = 1L;
+        int month = 10; // October
+        int year = 2021;
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        when(expensesRepository.findByUserIdAndDateBetween(userId, startDate, endDate))
+                .thenReturn(List.of(expensesEntity));
+
+        List<Expense> expenses = expenseService.getExpensesForUserAndMonth(userId, month, year);
+
+        assertNotNull(expenses);
+        assertEquals(1, expenses.size());
+        assertEquals(expense.getDescription(), expenses.get(0).getDescription());
+        assertEquals(expense.getAmount(), expenses.get(0).getAmount());
+        verify(expensesRepository, times(1)).findByUserIdAndDateBetween(userId, startDate, endDate);
+    }
+
+    @Test
+    void testGetTotalSpentForCategoryBudget_Success() {
+        Long userId = 1L;
+        String category = "RESTAURANTS";
+        YearMonth yearMonth = YearMonth.of(2021, 10); // October 2021
+        LocalDate startDate = yearMonth.atDay(1);
+        LocalDate endDate = yearMonth.atEndOfMonth();
+
+        when(expensesRepository.findByUserIdAndCategoryAndDateBetween(eq(userId), eq(Category.RESTAURANTS), eq(startDate), eq(endDate)))
+                .thenReturn(List.of(expensesEntity));
+
+        double totalSpent = expenseService.getTotalSpentForCategoryBudget(userId, category, yearMonth);
+
+        assertEquals(100.0, totalSpent);
+        verify(expensesRepository, times(1)).findByUserIdAndCategoryAndDateBetween(eq(userId), eq(Category.RESTAURANTS), eq(startDate), eq(endDate));
+    }
+
 
 
 
