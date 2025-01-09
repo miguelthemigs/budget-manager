@@ -95,7 +95,6 @@ class UserServiceImplTest {
     public void testEditUserSuccess() {
         user.setId(1L);
 
-        // Mock the behavior of authService to avoid the actual authorization check
         doNothing().when(authService).checkIfUserIsOwnerOrAdmin(user.getId());
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
         userService.editUser(user);
