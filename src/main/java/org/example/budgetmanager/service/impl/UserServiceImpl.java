@@ -6,7 +6,11 @@ import lombok.AllArgsConstructor;
 import org.example.budgetmanager.model.User;
 import org.example.budgetmanager.repository.UserRepository;
 import org.example.budgetmanager.repository.entity.UserEntity;
+import org.example.budgetmanager.service.AuthService;
 import org.example.budgetmanager.service.UserService;
+import org.example.budgetmanager.service.exceptions.UnauthorizedException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,10 +18,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final AuthService authService;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, @Lazy AuthService authService) {
+        this.userRepository = userRepository;
+        this.authService = authService;  // Use @Lazy to avoid circular dependency
+    }
 
     private User toModel(UserEntity userEntity) {
         return User.builder()
@@ -56,6 +67,12 @@ public class UserServiceImpl implements UserService {
     }
 
     public void deleteUser(Long id) {
+        User user = findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        try {
+            authService.checkIfUserIsOwnerOrAdmin(user.getId());
+        } catch (Exception e) {
+            throw new UnauthorizedException("You are not authorized to perform this action");
+        }
         userRepository.deleteById(id);
     }
 
@@ -64,6 +81,11 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("User cannot be null");
         } else if (user.getId() == null) {
             throw new IllegalArgumentException("User ID cannot be null");
+        }
+        try {
+            authService.checkIfUserIsOwnerOrAdmin(user.getId());
+        } catch (Exception e) {
+            throw new UnauthorizedException("You are not authorized to perform this action");
         }
         userRepository.save(toEntity(user));
     }

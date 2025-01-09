@@ -37,8 +37,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll() // Allow public access to login endpoint
-                        //.anyRequest().authenticated() // All other endpoints require authentication
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated() // All other endpoints require authentication
+                        //.anyRequest().permitAll()
 
 
                 )
