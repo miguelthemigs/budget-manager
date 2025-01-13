@@ -82,7 +82,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Your SonarQube token stored in GitHub secrets
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # Your SonarQube server URL stored in secrets
         run: |
-          ./gradlew sonar --info
+          ./gradlew sonar -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml --info
 
   docker:
     runs-on: ubuntu-latest  # Use Ubuntu-based runner
