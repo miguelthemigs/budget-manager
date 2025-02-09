@@ -51,7 +51,8 @@ Key features include role-based access control, insightful visualizations powere
 
 ### Backend  
 - **Framework**: Spring Boot (Java)  
-- **Database**: PostgreSQL (Dockerized)  
+- **Database**: PostgreSQL
+- **Docker**
 
 ### DevOps  
 - **Hosting**: Backend and database hosted in Docker for ease of sharing and deployment.  
