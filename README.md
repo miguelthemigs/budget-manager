@@ -53,6 +53,8 @@ Key features include role-based access control, insightful visualizations powere
 - **Framework**: Spring Boot (Java)  
 - **Database**: PostgreSQL
 - **Docker**
+![image](https://github.com/user-attachments/assets/f58d7568-cfb5-45e2-a184-51c83ce22d6b)
+
 
 ### DevOps  
 - **Hosting**: Backend and database hosted in Docker for ease of sharing and deployment.  
